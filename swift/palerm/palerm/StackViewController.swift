@@ -16,11 +16,12 @@ struct TimeCard {
     let timeCellsHeight: CGFloat?
     let timeCellsHeightConstraints: NSLayoutConstraint?
     var open: Bool
+    let pullIcon: UIImageView?
 }
 
 class StackViewController: UIViewController {
     
-    var timeCard1 = TimeCard(_self: nil, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false)
+    var timeCard1 = TimeCard(_self: nil, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,6 +124,15 @@ class StackViewController: UIViewController {
         expandView.layer.cornerRadius = 5
         expandView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         expandView.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "D8D8D8")!, position: .top)
+        let pullIcon = UIImage(named: "pull")
+        let imageView = UIImageView(image: pullIcon)
+        let point = expandView.convert(expandView.center, from: self.view)
+        imageView.frame = CGRect(x:0, y:0, width: 23, height: 9)
+        imageView.center = point
+        expandView.addSubview(imageView)
+        
+//        imageView.frame.origin = expandView.center
+//        super.view.addSubview(imageView)
 //        self.view.addSubview(expandView)
 //        stackView.frame.origin = CGPoint(x: 50, y: 50)
 //        stackView2.frame.origin = CGPoint(x: stackView.frame.minX, y: stackView.frame.maxY+6)
@@ -149,7 +159,7 @@ class StackViewController: UIViewController {
         
         self.view.addSubview(timeCard)
         
-        self.timeCard1 = TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: timeCellsWrapper, foot: expandView, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false)
+        self.timeCard1 = TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: timeCellsWrapper, foot: expandView, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
         
         expandView.addGestureRecognizer(UITapGestureRecognizer(
             target: self,
@@ -158,10 +168,10 @@ class StackViewController: UIViewController {
     }
     
     @objc func tapped(_ sender: UITapGestureRecognizer) {
-        print("tapped: ", self.timeCard1.timeCellsHeight!)
         if !self.timeCard1.open {
             self.timeCard1.timeCellsHeightConstraints!.constant = self.timeCard1.timeCellsHeight!
             self.timeCard1.timeCells!.alpha = 1
+            self.timeCard1.pullIcon!.transform = CGAffineTransform(rotationAngle: CGFloat(180*CGFloat.pi/180))
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
                 let point = self.timeCard1._self!.frame.origin
                 self.timeCard1._self!.frame = CGRect(x:point.x, y:point.y, width: self.timeCard1.timeCells!.frame.width, height: self.timeCard1._self!.frame.height+self.timeCard1.timeCellsHeight!)
@@ -171,6 +181,7 @@ class StackViewController: UIViewController {
             })
         } else {
             self.timeCard1.timeCellsHeightConstraints!.constant = 0
+            self.timeCard1.pullIcon!.transform = CGAffineTransform(rotationAngle: CGFloat(0*CGFloat.pi/180))
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
                 let point = self.timeCard1._self!.frame.origin
                 self.timeCard1._self!.frame = CGRect(x:point.x, y:point.y, width: self.timeCard1.timeCells!.frame.width, height: self.timeCard1._self!.frame.height-self.timeCard1.timeCellsHeight!)
