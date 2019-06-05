@@ -8,7 +8,19 @@
 
 import UIKit
 
+struct TimeCard {
+    var _self: UIStackView?
+    let head: UIStackView?
+    let timeCells: UIStackView?
+    let foot: UIView?
+    let timeCellsHeight: CGFloat?
+    let timeCellsHeightConstraints: NSLayoutConstraint?
+    var open: Bool
+}
+
 class StackViewController: UIViewController {
+    
+    var timeCard1 = TimeCard(_self: nil, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,15 +104,104 @@ class StackViewController: UIViewController {
 //        timeLabelStackWrapper.widthAnchor.constraint(equalToConstant: stackView.frame.width)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabelStackWrapper)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
-
         
-        self.view.addSubview(labelAndSwitcherWrapper)
+        let timeCell1 = createTimeCell(time: "08:15", width: labelAndSwitcherWrapper.frame.width)
+        let timeCell2 = createTimeCell(time: "08:20", width: labelAndSwitcherWrapper.frame.width)
+        let timeCellsWrapper = UIStackView(frame: CGRect(x: 0, y: 200, width: labelAndSwitcherWrapper.frame.width, height: timeCell1.frame.height+timeCell2.frame.height))
+        timeCellsWrapper.axis = .vertical
+        timeCellsWrapper.distribution = .fillEqually
+        timeCellsWrapper.addArrangedSubview(timeCell1)
+        timeCellsWrapper.addArrangedSubview(timeCell2)
+        
+        let timeCellsHeight = timeCellsWrapper.frame.height
+//        super.view.addSubview(timeCellsWrapper)
+        
+//        self.view.addSubview(labelAndSwitcherWrapper)
+        
+        let expandView = UIView(frame: CGRect(x: labelAndSwitcherWrapper.frame.minX, y: labelAndSwitcherWrapper.frame.maxY, width: labelAndSwitcherWrapper.frame.width, height: 30))
+        expandView.backgroundColor = PalermColor.Dark500.UIColor
+        expandView.layer.cornerRadius = 5
+        expandView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        expandView.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "D8D8D8")!, position: .top)
+//        self.view.addSubview(expandView)
 //        stackView.frame.origin = CGPoint(x: 50, y: 50)
 //        stackView2.frame.origin = CGPoint(x: stackView.frame.minX, y: stackView.frame.maxY+6)
 //        stackView.addBackground(.white)
 //        stackView2.addBackground(.white)
 //        self.view.addSubview(stackView)
 //        self.view.addSubview(stackView2)
+        
+//        let timeCard = UIStackView(frame: CGRect(x:0, y:0, width: labelAndSwitcherWrapper.frame.width, height: labelAndSwitcherWrapper.frame.height+timeCellsWrapper.frame.height+expandView.frame.height))
+        let timeCard = UIStackView(frame: CGRect(x:0, y:0, width: labelAndSwitcherWrapper.frame.width, height: labelAndSwitcherWrapper.frame.height+0+expandView.frame.height))
+        timeCard.axis = .vertical
+        timeCard.distribution = .fill
+        timeCard.alignment = .fill
+//        timeCellsWrapper.heightAnchor.constraint(equalToConstant: timeCellsWrapper.frame.height).isActive = true
+        timeCellsWrapper.alpha = 0
+        let timeCellsHeightConstraints = timeCellsWrapper.heightAnchor.constraint(equalToConstant: 0)
+        timeCellsHeightConstraints.isActive = true
+        timeCard.addArrangedSubview(labelAndSwitcherWrapper)
+        timeCard.addArrangedSubview(timeCellsWrapper)
+        timeCard.addArrangedSubview(expandView)
+//        timeCard.addBackground(.blue)
+        
+        timeCard.center = self.view.center
+        
+        self.view.addSubview(timeCard)
+        
+        self.timeCard1 = TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: timeCellsWrapper, foot: expandView, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false)
+        
+        expandView.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(self.tapped(_:))
+        ))
+    }
+    
+    @objc func tapped(_ sender: UITapGestureRecognizer) {
+        print("tapped: ", self.timeCard1.timeCellsHeight!)
+        if !self.timeCard1.open {
+            self.timeCard1.timeCellsHeightConstraints!.constant = self.timeCard1.timeCellsHeight!
+            self.timeCard1.timeCells!.alpha = 1
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
+                let point = self.timeCard1._self!.frame.origin
+                self.timeCard1._self!.frame = CGRect(x:point.x, y:point.y, width: self.timeCard1.timeCells!.frame.width, height: self.timeCard1._self!.frame.height+self.timeCard1.timeCellsHeight!)
+                self.view.layoutIfNeeded()
+            }, completion: {(_ end: Bool) -> Void in
+                self.timeCard1.open = true
+            })
+        } else {
+            self.timeCard1.timeCellsHeightConstraints!.constant = 0
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
+                let point = self.timeCard1._self!.frame.origin
+                self.timeCard1._self!.frame = CGRect(x:point.x, y:point.y, width: self.timeCard1.timeCells!.frame.width, height: self.timeCard1._self!.frame.height-self.timeCard1.timeCellsHeight!)
+                self.view.layoutIfNeeded()
+                self.timeCard1.timeCells!.alpha = 0
+            }, completion: {(_ end: Bool) -> Void in
+                self.timeCard1.open = false
+            })
+        }
+        
+    }
+    
+    func createTimeCell(time: String, width: CGFloat) -> UIStackView {
+        let stackView = UIStackView(frame: CGRect(x: 0, y: 200, width: width, height: 54))
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .center
+        stackView.addBackground(PalermColor.Dark300.UIColor)
+        let timeLabel = UILabel()
+        timeLabel.text = time
+        timeLabel.font = UIFont.systemFont(ofSize: 18)
+        timeLabel.textColor = .white
+        timeLabel.sizeToFit()
+        timeLabel.textAlignment = .left
+        let switcher = UISwitch(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        stackView.addArrangedSubview(timeLabel)
+        stackView.addArrangedSubview(switcher)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        stackView.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "D8D8D8")!, position: .top)
+        return stackView
     }
     
     func createTimeLabel(time: String) -> UIView {
@@ -160,6 +261,7 @@ extension UIStackView {
         subView.backgroundColor = color
         subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         subView.layer.cornerRadius = cournerRadius
+        subView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         insertSubview(subView, at: 0)
     }
 }
