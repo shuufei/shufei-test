@@ -31,52 +31,55 @@ class StackViewController: UIViewController {
         view.backgroundColor = PalermColor.Dark200.UIColor
 
         let times: [String] = [
-            "08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"
+//            "08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"
+//            "08:00", "08:05", "08:10"
+            "08:00"
         ]
-        let timeCard = createTimeCard(times: times)
-        self.timeCard1 = timeCard
-        if let timeCardView = timeCard._self {
-            timeCardView.frame.origin = CGPoint(x: 16, y: 80) // for debug
-            self.view.addSubview(timeCardView)
+        var timeCard: TimeCard?
+        if times.count == 1 {
+            timeCard = createTimeCard(time: times[0])
+        } else if 1 < times.count {
+            timeCard = createTimeCard(times: times)
+        }
+        if let _timeCard = timeCard {
+            self.timeCard1 = _timeCard
+            if let timeCardView = _timeCard._self {
+                timeCardView.frame.origin = CGPoint(x: 16, y: 80) // for debug
+                self.view.addSubview(timeCardView)
+            }
         }
     }
     
+    func createTimeCard(time: String) -> TimeCard {
+        let timeLabel = self.createTimeLabelForOne(time: time)
+        let switcher = UISwitch(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        switcher.sizeToFit()
+        let labelAndSwitcherWrapper = UIStackView(
+            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: switcher.frame.height+24)
+        )
+        labelAndSwitcherWrapper.axis = .horizontal
+        labelAndSwitcherWrapper.distribution = .equalSpacing
+        labelAndSwitcherWrapper.alignment = .center
+        labelAndSwitcherWrapper.isLayoutMarginsRelativeArrangement = true
+        labelAndSwitcherWrapper.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
+        labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5)
+        labelAndSwitcherWrapper.addArrangedSubview(timeLabel)
+        labelAndSwitcherWrapper.addArrangedSubview(switcher)
+        return TimeCard(_self: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
+    }
+    
     func createTimeCard(times: [String]) -> TimeCard {
-        // create timeCard head
-        var timeLabelStacks: [UIStackView] = []
-        var timeLabelStacksHeight: CGFloat = 0
-        var timeLabelStacksWidth: CGFloat = 0
-        let timesStackCount = Int(ceil(Double(times.count) / Double(self.timeLabelMaxCount)))
-        for i in 0..<timesStackCount {
-            let offset = i*self.timeLabelMaxCount
-            let tmpTimes = times.dropFirst(offset).prefix(self.timeLabelMaxCount)
-            let stackView = createTimeLabelStack(times: tmpTimes.map{$0})
-            timeLabelStacks.append(stackView)
-            timeLabelStacksHeight += stackView.frame.height
-            if timeLabelStacksWidth < stackView.frame.width {
-                timeLabelStacksWidth = stackView.frame.width
-            }
-        }
-        let timeLabelStackWrapper = UIStackView(frame: CGRect(x: 0, y: 200, width: timeLabelStacksWidth, height: timeLabelStacksHeight+(CGFloat(timeLabelStacks.count-1)*self.labelSpace)))
-        timeLabelStackWrapper.axis = .vertical
-        timeLabelStackWrapper.distribution = .fillEqually
-        timeLabelStackWrapper.spacing = labelSpace
-        timeLabelStackWrapper.alignment = .leading
-        for stack in timeLabelStacks {
-            timeLabelStackWrapper.addArrangedSubview(stack)
-        }
+        let timeLabelStackWrapper = self.createTimeStackList(times: times)
         let switcher = UISwitch(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         let labelAndSwitcherWrapper = UIStackView(
             frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: timeLabelStackWrapper.frame.height+24)
         )
-        labelAndSwitcherWrapper.center = self.view.center
         labelAndSwitcherWrapper.axis = .horizontal
         labelAndSwitcherWrapper.distribution = .equalSpacing
         labelAndSwitcherWrapper.alignment = .top
         labelAndSwitcherWrapper.isLayoutMarginsRelativeArrangement = true
         labelAndSwitcherWrapper.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
-        labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5)
-        labelAndSwitcherWrapper.layer.cornerRadius = 5
+        labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5, true)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabelStackWrapper)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
 
@@ -104,6 +107,42 @@ class StackViewController: UIViewController {
         timeCard.addArrangedSubview(expandView)
         timeCard.addArrangedSubview(expandTrigger)
         return TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: expandView, foot: expandTrigger, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
+    }
+    
+    func createTimeStackList(times: [String]) -> UIStackView {
+        var timeLabelStacks: [UIStackView] = []
+        var timeLabelStacksHeight: CGFloat = 0
+        var timeLabelStacksWidth: CGFloat = 0
+        let timesStackCount = Int(ceil(Double(times.count) / Double(self.timeLabelMaxCount)))
+        for i in 0..<timesStackCount {
+            let offset = i*self.timeLabelMaxCount
+            let tmpTimes = times.dropFirst(offset).prefix(self.timeLabelMaxCount)
+            let stackView = createTimeLabelStack(times: tmpTimes.map{$0})
+            timeLabelStacks.append(stackView)
+            timeLabelStacksHeight += stackView.frame.height
+            if timeLabelStacksWidth < stackView.frame.width {
+                timeLabelStacksWidth = stackView.frame.width
+            }
+        }
+        let timeLabelStackWrapper = UIStackView(frame: CGRect(x: 0, y: 200, width: timeLabelStacksWidth, height: timeLabelStacksHeight+(CGFloat(timeLabelStacks.count-1)*self.labelSpace)))
+        timeLabelStackWrapper.axis = .vertical
+        timeLabelStackWrapper.distribution = .fillEqually
+        timeLabelStackWrapper.spacing = self.labelSpace
+        timeLabelStackWrapper.alignment = .leading
+        for stack in timeLabelStacks {
+            timeLabelStackWrapper.addArrangedSubview(stack)
+        }
+        return timeLabelStackWrapper
+    }
+    
+    func createTimeLabelForOne(time: String) -> UILabel {
+        let label = UILabel(frame: CGRect(x:0, y: 0, width: 0, height: 0))
+        label.text = time
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = .white
+        label.textAlignment = .left
+        label.sizeToFit()
+        return label
     }
     
     func createTimeCardExpandTriggerView(width: CGFloat) -> UIView {
@@ -214,7 +253,6 @@ class StackViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.sizeToFit()
-        print("labelsize: \(label.frame.size)")
         label.layer.cornerRadius = 3
         label.clipsToBounds = true
         return label
@@ -252,12 +290,14 @@ class TimeLabel: UILabel {
 }
 
 extension UIStackView {
-    func addBackground(_ color: UIColor, _ cournerRadius: CGFloat = 0) {
+    func addBackground(_ color: UIColor, _ cournerRadius: CGFloat = 0, _ top: Bool = false) {
         let subView = UIView(frame: bounds)
         subView.backgroundColor = color
         subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         subView.layer.cornerRadius = cournerRadius
-        subView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        if top {
+            subView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        }
         insertSubview(subView, at: 0)
     }
 }
