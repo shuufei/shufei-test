@@ -19,34 +19,93 @@ struct TimeCard {
     let pullIcon: UIImageView?
 }
 
-class StackViewController: UIViewController {
+let alertTimesList = [
+    ["08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"],
+    ["09:30"],
+    ["10:10", "10:15", "10:20"]
+]
+
+class StackViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    @IBOutlet weak var tableView: UITableView!
     
     var timeCard1 = TimeCard(_self: nil, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
+    var timeCardList: [TimeCard] = []
     let labelSpace: CGFloat = 6
     let timeLabelMaxCount = 4
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = PalermColor.Dark200.UIColor
-
-        let times: [String] = [
-//            "08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"
-//            "08:00", "08:05", "08:10"
-            "08:00"
-        ]
-        var timeCard: TimeCard?
-        if times.count == 1 {
-            timeCard = createTimeCard(time: times[0])
-        } else if 1 < times.count {
-            timeCard = createTimeCard(times: times)
-        }
-        if let _timeCard = timeCard {
-            self.timeCard1 = _timeCard
-            if let timeCardView = _timeCard._self {
-                timeCardView.frame.origin = CGPoint(x: 16, y: 80) // for debug
-                self.view.addSubview(timeCardView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        self.tableView.backgroundColor = PalermColor.Dark200.UIColor
+        self.tableView.separatorStyle = .none
+        self.tableView.allowsSelection = false
+        self.view.backgroundColor = PalermColor.Dark200.UIColor
+        
+        for alertTimes in alertTimesList {
+            var timeCard: TimeCard?
+            if alertTimes.count == 1 {
+                timeCard = createTimeCard(time: alertTimes[0])
+            } else if 1 < alertTimes.count {
+                timeCard = createTimeCard(times: alertTimes)
             }
+            if let _timeCard = timeCard {
+                self.timeCardList.append(_timeCard)
+            }
+        }
+        
+//        let times: [String] = [
+//            //            "08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"
+//            "08:00", "08:05", "08:10"
+//            //            "08:00"
+//        ]
+//        var timeCard: TimeCard?
+//        if times.count == 1 {
+//            timeCard = createTimeCard(time: times[0])
+//        } else if 1 < times.count {
+//            timeCard = createTimeCard(times: times)
+//        }
+//        if let _timeCard = timeCard {
+//            self.timeCard1 = _timeCard
+//            if let timeCardView = _timeCard._self {
+//                timeCardView.frame.origin = CGPoint(x: 16, y: 80) // for debug
+//                self.view.addSubview(timeCardView)
+//            }
+//        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.timeCardList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+        cell.backgroundColor = PalermColor.Dark200.UIColor
+        cell.selectionStyle = .none
+        let index = (indexPath as NSIndexPath).row
+        if let timeCardView = self.timeCardList[index]._self {
+            var y: CGFloat = 5
+            if index == 0 {
+                y += 11
+            }
+            timeCardView.frame.origin = CGPoint(x: 0, y: y)
+            timeCardView.center.x = self.view.center.x
+            cell.addSubview(timeCardView)
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let index = (indexPath as NSIndexPath).row
+        if let timeCardView = self.timeCardList[index]._self {
+            var padding: CGFloat = 10
+            if index == 0 {
+                padding += 11
+            }
+           return timeCardView.frame.height+padding
+        } else {
+            return 0
         }
     }
     
@@ -71,8 +130,10 @@ class StackViewController: UIViewController {
     func createTimeCard(times: [String]) -> TimeCard {
         let timeLabelStackWrapper = self.createTimeStackList(times: times)
         let switcher = UISwitch(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        switcher.sizeToFit()
+        let wrapperHeight = timeLabelStackWrapper.frame.height < switcher.frame.height ? switcher.frame.height : timeLabelStackWrapper.frame.height
         let labelAndSwitcherWrapper = UIStackView(
-            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: timeLabelStackWrapper.frame.height+24)
+            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: wrapperHeight+24)
         )
         labelAndSwitcherWrapper.axis = .horizontal
         labelAndSwitcherWrapper.distribution = .equalSpacing
