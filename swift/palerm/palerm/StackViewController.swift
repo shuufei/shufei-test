@@ -42,7 +42,6 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
         self.view.backgroundColor = PalermColor.Dark200.UIColor
-        
         for (index, alertTimes) in alertTimesList.enumerated() {
             var timeCard: TimeCard?
             if alertTimes.count == 1 {
@@ -84,9 +83,11 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.backgroundColor = PalermColor.Dark200.UIColor
-        cell.selectionStyle = .none
         let index = (indexPath as NSIndexPath).row
+        cell.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0)
+        cell.selectionStyle = .none
+        cell.clipsToBounds = false
+        cell.layer.zPosition = CGFloat(1 * index)
         if let timeCardView = self.timeCardList[index]._self {
             var y: CGFloat = 5
             if index == 0 {
@@ -143,7 +144,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         labelAndSwitcherWrapper.alignment = .center
         labelAndSwitcherWrapper.isLayoutMarginsRelativeArrangement = true
         labelAndSwitcherWrapper.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
-        labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5)
+        labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabel)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
         return TimeCard(_self: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
@@ -186,9 +187,11 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         timeCard.axis = .vertical
         timeCard.distribution = .fill
         timeCard.alignment = .fill
+        timeCard.clipsToBounds = false
         timeCard.addArrangedSubview(labelAndSwitcherWrapper)
         timeCard.addArrangedSubview(expandView)
         timeCard.addArrangedSubview(expandTrigger)
+        timeCard.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
         return TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: expandView, foot: expandTrigger, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
     }
     
@@ -324,7 +327,8 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
-        stackView.addBackground(PalermColor.Dark300.UIColor)
+//        stackView.addBackground(PalermColor.Dark300.UIColor)
+        stackView.addBackground(PalermColor.Dark400.UIColor)
         let timeLabel = UILabel()
         timeLabel.text = time
         timeLabel.font = UIFont.systemFont(ofSize: 18)
@@ -385,13 +389,19 @@ class TimeLabel: UILabel {
 }
 
 extension UIStackView {
-    func addBackground(_ color: UIColor, _ cournerRadius: CGFloat = 0, _ top: Bool = false) {
+    func addBackground(_ color: UIColor, _ cournerRadius: CGFloat = 0, _ top: Bool = false, _ shadow: Bool = false) {
         let subView = UIView(frame: bounds)
         subView.backgroundColor = color
         subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         subView.layer.cornerRadius = cournerRadius
         if top {
             subView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        }
+        if shadow {
+            subView.layer.shadowColor = UIColor.black.cgColor
+            subView.layer.shadowOpacity = 0.3
+            subView.layer.shadowRadius = 16
+            subView.layer.shadowOffset = CGSize(width: 0, height: 5)
         }
         insertSubview(subView, at: 0)
     }
