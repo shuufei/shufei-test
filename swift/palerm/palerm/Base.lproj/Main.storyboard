@@ -78,13 +78,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RWn-BY-Gm7">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RWn-BY-Gm7">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="RWn-BY-Gm7" firstAttribute="top" secondItem="LM3-iC-Ypa" secondAttribute="top" id="55w-XV-CXw"/>
+                            <constraint firstItem="RWn-BY-Gm7" firstAttribute="trailing" secondItem="D63-kx-jbi" secondAttribute="trailing" id="5HK-Fg-ZpW"/>
+                            <constraint firstItem="RWn-BY-Gm7" firstAttribute="leading" secondItem="D63-kx-jbi" secondAttribute="leading" id="Hs7-ku-ex3"/>
+                            <constraint firstAttribute="bottom" secondItem="RWn-BY-Gm7" secondAttribute="bottom" id="O1A-p3-wlW"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="D63-kx-jbi"/>
                     </view>
                     <connections>
