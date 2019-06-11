@@ -94,6 +94,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="RWn-BY-Gm7" id="bqp-ne-o6u"/>
+                        <segue destination="WUU-VG-Q18" kind="presentation" identifier="locateSetting" id="A5H-48-hRG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KrS-VC-610" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -155,4 +156,7 @@
     <resources>
         <image name="add" width="20" height="20"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="A5H-48-hRG"/>
+    </inferredMetricsTieBreakers>
 </document>

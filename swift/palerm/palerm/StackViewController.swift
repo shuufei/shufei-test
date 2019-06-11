@@ -107,7 +107,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if index == 0 {
                 padding += 11
             }
-            print("--- return height for row: \(index), \(String(describing: self.timeCardList[index]._self?.frame.height))")
+//            print("--- return height for row: \(index), \(String(describing: self.timeCardList[index]._self?.frame.height))")
             return (self.timeCardList[index]._self?.frame.height)!+padding
         }
         var height: CGFloat = self.timeCardList[index].head!.frame.height
@@ -147,6 +147,10 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabel)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
+        labelAndSwitcherWrapper.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(self.locateSetting(_:))
+        ))
         return TimeCard(_self: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
     }
     
@@ -166,6 +170,10 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5, true)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabelStackWrapper)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
+        labelAndSwitcherWrapper.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(self.locateSetting(_:))
+        ))
 
         // create expand view
         let expandView = self.createTimeCardExpandView(times: times, width: labelAndSwitcherWrapper.frame.width)
@@ -357,6 +365,9 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return label
     }
     
+    @objc func locateSetting(_ sender: UIStackView) {
+        self.performSegue(withIdentifier: "locateSetting", sender: nil)
+    }
 
     /*
     // MARK: - Navigation
