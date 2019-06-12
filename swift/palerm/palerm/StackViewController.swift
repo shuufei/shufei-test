@@ -85,6 +85,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let cell: UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         let index = (indexPath as NSIndexPath).row
         cell.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0)
+//        cell.backgroundColor = .lightGray
         cell.selectionStyle = .none
         cell.clipsToBounds = false
         cell.layer.zPosition = CGFloat(1 * index)
@@ -96,7 +97,15 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             timeCardView.frame.origin = CGPoint(x: 0, y: y)
             timeCardView.center.x = self.view.center.x
             cell.addSubview(timeCardView)
+            var topMargin: CGFloat = 5
+            if index == 0 {
+                topMargin += 11
+            }
+            timeCardView.topAnchor.constraint(equalTo: cell.topAnchor, constant: topMargin).isActive = true
+            timeCardView.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16).isActive = true
+            timeCardView.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -16).isActive = true
         }
+        cell.layoutIfNeeded()
         return cell
     }
     
@@ -109,6 +118,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
 //            print("--- return height for row: \(index), \(String(describing: self.timeCardList[index]._self?.frame.height))")
             return (self.timeCardList[index]._self?.frame.height)!+padding
+//            return (self.timeCardList[index]._self?.heightAnchor)!+padding
         }
         var height: CGFloat = self.timeCardList[index].head!.frame.height
         if let foot = self.timeCardList[index].foot {
@@ -136,9 +146,12 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let timeLabel = self.createTimeLabelForOne(time: time)
         let switcher = UISwitch(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         switcher.sizeToFit()
-        let labelAndSwitcherWrapper = UIStackView(
-            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: switcher.frame.height+24)
-        )
+//        let labelAndSwitcherWrapper = UIStackView(
+//            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: switcher.frame.height+24)
+//        )
+        let labelAndSwitcherWrapper = UIStackView()
+        labelAndSwitcherWrapper.translatesAutoresizingMaskIntoConstraints = false
+        labelAndSwitcherWrapper.heightAnchor.constraint(equalToConstant: switcher.frame.height+24)
         labelAndSwitcherWrapper.axis = .horizontal
         labelAndSwitcherWrapper.distribution = .equalSpacing
         labelAndSwitcherWrapper.alignment = .center
@@ -159,9 +172,12 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let switcher = UISwitch(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         switcher.sizeToFit()
         let wrapperHeight = timeLabelStackWrapper.frame.height < switcher.frame.height ? switcher.frame.height : timeLabelStackWrapper.frame.height
-        let labelAndSwitcherWrapper = UIStackView(
-            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: wrapperHeight+24)
-        )
+//        let labelAndSwitcherWrapper = UIStackView(
+//            frame: CGRect(x: 0, y: 0, width: self.view.frame.width-32, height: wrapperHeight+24)
+//        )
+        let labelAndSwitcherWrapper = UIStackView()
+        labelAndSwitcherWrapper.translatesAutoresizingMaskIntoConstraints = false
+        labelAndSwitcherWrapper.heightAnchor.constraint(equalToConstant: wrapperHeight+24).isActive = true
         labelAndSwitcherWrapper.axis = .horizontal
         labelAndSwitcherWrapper.distribution = .equalSpacing
         labelAndSwitcherWrapper.alignment = .top
@@ -183,15 +199,22 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
         // create expand trigger
         let expandTrigger = self.createTimeCardExpandTriggerView(width: labelAndSwitcherWrapper.frame.width)
+        expandTrigger.translatesAutoresizingMaskIntoConstraints = false
+        expandTrigger.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        expandTrigger.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "505050")!, position: .top)
         let pullIcon = UIImage(named: "pull")
         let imageView = UIImageView(image: pullIcon)
-        let point = expandTrigger.convert(expandTrigger.center, from: self.view)
+//        let point = expandTrigger.convert(expandTrigger.center, from: self.view)
         imageView.frame = CGRect(x:0, y:0, width: 23, height: 9)
-        imageView.center = point
+        imageView.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
+//        imageView.center = point
         expandTrigger.addSubview(imageView)
         
         // create time card
-        let timeCard = UIStackView(frame: CGRect(x:0, y:0, width: labelAndSwitcherWrapper.frame.width, height: labelAndSwitcherWrapper.frame.height+0+expandTrigger.frame.height))
+//        let timeCard = UIStackView(frame: CGRect(x:0, y:0, width: labelAndSwitcherWrapper.frame.width, height: labelAndSwitcherWrapper.frame.height+0+expandTrigger.frame.height))
+        let timeCard = UIStackView()
+        timeCard.translatesAutoresizingMaskIntoConstraints = false
+        timeCard.heightAnchor.constraint(equalToConstant: labelAndSwitcherWrapper.frame.height+expandTrigger.frame.height)
         timeCard.axis = .vertical
         timeCard.distribution = .fill
         timeCard.alignment = .fill
@@ -240,7 +263,8 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func createTimeCardExpandTriggerView(width: CGFloat) -> UIView {
-        let expandView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 30))
+//        let expandView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 30))
+        let expandView = UIView()
         expandView.backgroundColor = PalermColor.Dark500.UIColor
         expandView.layer.cornerRadius = 5
         expandView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
@@ -260,7 +284,8 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             cells.append(cell)
             cellHeight += cell.frame.height
         }
-        let timeCellsWrapper = UIStackView(frame: CGRect(x: 0, y: 200, width: width, height: cellHeight))
+//        let timeCellsWrapper = UIStackView(frame: CGRect(x: 0, y: 200, width: width, height: cellHeight))
+        let timeCellsWrapper = UIStackView(frame: CGRect(x: 0, y: 0, width: 0, height: cellHeight))
         timeCellsWrapper.axis = .vertical
         timeCellsWrapper.distribution = .fillEqually
         timeCellsWrapper.alpha = 0
@@ -303,6 +328,9 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             self.tableView.beginUpdates()
             self.toggleOpen(timeCard: &self.timeCardList[timeCardIndex])
             self.tableView.endUpdates()
+//            self.view.layoutIfNeeded()
+//            self.toggleOpen(timeCard: &self.timeCardList[timeCardIndex])
+//            self.tableView.reloadRows(at: [NSIndexPath(row: timeCardIndex, section: 0) as IndexPath], with: .automatic)
             timeCard.timeCellsHeightConstraints?.constant = timeCard.timeCellsHeight ?? 0
             timeCard.timeCells?.alpha = 1
             timeCard.pullIcon?.transform = CGAffineTransform(rotationAngle: CGFloat(180*CGFloat.pi/180))

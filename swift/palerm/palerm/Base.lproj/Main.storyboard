@@ -101,6 +101,21 @@
             </objects>
             <point key="canvasLocation" x="256.52173913043481" y="789.50892857142856"/>
         </scene>
+        <!--Auto Layout Test View Controller-->
+        <scene sceneID="mpP-EW-ipk">
+            <objects>
+                <viewController id="r3p-Ah-zuv" customClass="AutoLayoutTestViewController" customModule="palerm" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dcv-hn-nXP">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="yWX-Zt-jVt"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aay-07-HO5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1461" y="822"/>
+        </scene>
         <!--Setting View Controller-->
         <scene sceneID="Ucz-gD-KS9">
             <objects>

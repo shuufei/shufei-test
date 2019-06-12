@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C28546A422A566F8009B1853 /* stackviewcontroller-back.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28546A322A566F8009B1853 /* stackviewcontroller-back.swift */; };
+		C28546A622B12EFF009B1853 /* AutoLayoutTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28546A522B12EFE009B1853 /* AutoLayoutTestViewController.swift */; };
 		C29A37DF229D55B800672F98 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29A37DE229D55B800672F98 /* AppDelegate.swift */; };
 		C29A37E1229D55B800672F98 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29A37E0229D55B800672F98 /* ViewController.swift */; };
 		C29A37E4229D55B800672F98 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C29A37E2229D55B800672F98 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		C28546A322A566F8009B1853 /* stackviewcontroller-back.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "stackviewcontroller-back.swift"; sourceTree = "<group>"; };
+		C28546A522B12EFE009B1853 /* AutoLayoutTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLayoutTestViewController.swift; sourceTree = "<group>"; };
 		C29A37DB229D55B800672F98 /* palerm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = palerm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C29A37DE229D55B800672F98 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C29A37E0229D55B800672F98 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				C29A37E7229D55BD00672F98 /* LaunchScreen.storyboard */,
 				C29A37EA229D55BD00672F98 /* Info.plist */,
 				C29A37FE229D569E00672F98 /* Extention.swift */,
+				C28546A522B12EFE009B1853 /* AutoLayoutTestViewController.swift */,
 			);
 			path = palerm;
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 				C29A3807229ED86500672F98 /* AlermTableViewCell.swift in Sources */,
 				C29A37FF229D569E00672F98 /* Extention.swift in Sources */,
 				C29A37DF229D55B800672F98 /* AppDelegate.swift in Sources */,
+				C28546A622B12EFF009B1853 /* AutoLayoutTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
