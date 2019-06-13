@@ -198,32 +198,44 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let timeCellsHeight = expandView.frame.height
 
         // create expand trigger
+        let borderHeight: CGFloat = 0.5
+        let expandTriggerHeight: CGFloat = 30
         let expandTrigger = self.createTimeCardExpandTriggerView(width: labelAndSwitcherWrapper.frame.width)
         expandTrigger.translatesAutoresizingMaskIntoConstraints = false
-        expandTrigger.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        expandTrigger.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "505050")!, position: .top)
+        expandTrigger.heightAnchor.constraint(equalToConstant: expandTriggerHeight).isActive = true
         let pullIcon = UIImage(named: "pull")
         let imageView = UIImageView(image: pullIcon)
-//        let point = expandTrigger.convert(expandTrigger.center, from: self.view)
         imageView.frame = CGRect(x:0, y:0, width: 23, height: 9)
         imageView.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
-//        imageView.center = point
         expandTrigger.addSubview(imageView)
+        let expandTriggerBorder = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: borderHeight))
+        expandTriggerBorder.backgroundColor = PalermColor.Dark100.UIColor
+        let expandTriggerWrapper = UIStackView()
+        expandTriggerWrapper.axis = .vertical
+        expandTriggerWrapper.distribution = .fill
+        expandTriggerWrapper.translatesAutoresizingMaskIntoConstraints = false
+        expandTriggerWrapper.heightAnchor.constraint(equalToConstant: expandTriggerHeight+borderHeight).isActive = true
+        expandTriggerWrapper.addArrangedSubview(expandTriggerBorder)
+        expandTriggerWrapper.addArrangedSubview(expandTrigger)
+        expandTriggerWrapper.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(self.tapped(_:))
+        ))
         
         // create time card
 //        let timeCard = UIStackView(frame: CGRect(x:0, y:0, width: labelAndSwitcherWrapper.frame.width, height: labelAndSwitcherWrapper.frame.height+0+expandTrigger.frame.height))
         let timeCard = UIStackView()
         timeCard.translatesAutoresizingMaskIntoConstraints = false
-        timeCard.heightAnchor.constraint(equalToConstant: labelAndSwitcherWrapper.frame.height+expandTrigger.frame.height)
+        timeCard.heightAnchor.constraint(equalToConstant: labelAndSwitcherWrapper.frame.height+expandTriggerWrapper.frame.height)
         timeCard.axis = .vertical
         timeCard.distribution = .fill
         timeCard.alignment = .fill
         timeCard.clipsToBounds = false
         timeCard.addArrangedSubview(labelAndSwitcherWrapper)
         timeCard.addArrangedSubview(expandView)
-        timeCard.addArrangedSubview(expandTrigger)
+        timeCard.addArrangedSubview(expandTriggerWrapper)
         timeCard.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
-        return TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: expandView, foot: expandTrigger, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
+        return TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: expandView, foot: expandTriggerWrapper, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
     }
     
     func createTimeStackList(times: [String]) -> UIStackView {
@@ -263,16 +275,10 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func createTimeCardExpandTriggerView(width: CGFloat) -> UIView {
-//        let expandView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 30))
         let expandView = UIView()
         expandView.backgroundColor = PalermColor.Dark500.UIColor
         expandView.layer.cornerRadius = 5
         expandView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        expandView.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "505050")!, position: .top)
-        expandView.addGestureRecognizer(UITapGestureRecognizer(
-            target: self,
-            action: #selector(self.tapped(_:))
-        ))
         return expandView
     }
     
@@ -284,7 +290,6 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             cells.append(cell)
             cellHeight += cell.frame.height
         }
-//        let timeCellsWrapper = UIStackView(frame: CGRect(x: 0, y: 200, width: width, height: cellHeight))
         let timeCellsWrapper = UIStackView(frame: CGRect(x: 0, y: 0, width: 0, height: cellHeight))
         timeCellsWrapper.axis = .vertical
         timeCellsWrapper.distribution = .fillEqually
@@ -359,11 +364,10 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func createTimeCell(time: String, width: CGFloat) -> UIStackView {
-        let stackView = UIStackView(frame: CGRect(x: 0, y: 200, width: width, height: 54))
+        let stackView = UIStackView(frame: CGRect(x: 0, y: 0, width: width, height: 54))
         stackView.axis = .horizontal
         stackView.distribution = .fill
         stackView.alignment = .center
-//        stackView.addBackground(PalermColor.Dark300.UIColor)
         stackView.addBackground(PalermColor.Dark400.UIColor)
         let timeLabel = UILabel()
         timeLabel.text = time
@@ -376,8 +380,16 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         stackView.addArrangedSubview(switcher)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-        stackView.addBorder(width: 0.5, color: UIKit.UIColor(hexString: "505050")!, position: .top)
-        return stackView
+        let border = UIView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.heightAnchor.constraint(lessThanOrEqualToConstant: 0.5).isActive = true
+        border.backgroundColor = PalermColor.Dark100.UIColor
+        let cell = UIStackView(frame: CGRect(x: 0, y: 0, width: 0, height: 54.5))
+        cell.axis = .vertical
+        cell.distribution = .fill
+        cell.addArrangedSubview(border)
+        cell.addArrangedSubview(stackView)
+        return cell
     }
     
     func createTimeLabel(time: String) -> UIView {
