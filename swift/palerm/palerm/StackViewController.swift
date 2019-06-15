@@ -10,6 +10,11 @@ import UIKit
 
 struct TimeCardHead {
     let selfView: UIStackView
+    var switcher: UISwitch? = nil
+    
+    mutating func setSwitcher(_ switcher: UISwitch) {
+        self.switcher = switcher
+    }
 }
 
 struct TimeCardTimeCells {
@@ -17,11 +22,11 @@ struct TimeCardTimeCells {
     var height: CGFloat? = nil
     var heightConstraints: NSLayoutConstraint? = nil
     
-    mutating func setHeight(height: CGFloat) {
+    mutating func setHeight(_ height: CGFloat) {
         self.height = height
     }
     
-    mutating func setHeightConstraints(constraints: NSLayoutConstraint) {
+    mutating func setHeightConstraints(_ constraints: NSLayoutConstraint) {
         self.heightConstraints = constraints
     }
 }
@@ -30,7 +35,7 @@ struct TimeCardFoot {
     let selfView: UIStackView
     var pullIcon: UIImageView? = nil
     
-    mutating func setPullIcon(pullIcon: UIImageView) {
+    mutating func setPullIcon(_ pullIcon: UIImageView) {
         self.pullIcon = pullIcon
     }
 }
@@ -41,6 +46,8 @@ class TimeCard {
     var timeCells: TimeCardTimeCells? = nil
     var foot: TimeCardFoot? = nil
     var open: Bool = false
+    var topAnchor: NSLayoutConstraint? = nil
+    var topAnchorInit: CGFloat? = nil
 //    var timeCellsHeight: CGFloat? = nil
 //    var timeCellsHeightConstraints: NSLayoutConstraint? = nil
 //    var pullIcon: UIImageView? = nil
@@ -55,6 +62,11 @@ class TimeCard {
         self.timeCells = timeCells
         self.foot = foot
         self.open = open
+    }
+    
+    func setTopAnchor(_ topAnchor: NSLayoutConstraint) {
+        self.topAnchor = topAnchor
+        self.topAnchorInit = topAnchor.constant
     }
     
 }
@@ -105,7 +117,8 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     expandTrigger.selfView.tag = index
                 }
                 if alertTimes.count == 1 {
-                    _timeCard.selfView.tag = index
+//                    _timeCard.selfView.tag = index
+                    _timeCard.head!.selfView.tag = index
                 } else if 1 < alertTimes.count {
                     _timeCard.head!.selfView.tag = index
                 }
@@ -157,7 +170,9 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         if index == 0 {
             topMargin += 11
         }
-        timeCardView.topAnchor.constraint(equalTo: cell.topAnchor, constant: topMargin).isActive = true
+        let topAnchor = timeCardView.topAnchor.constraint(equalTo: cell.topAnchor, constant: topMargin)
+        topAnchor.isActive = true
+        self.timeCardList[index].setTopAnchor(topAnchor)
         timeCardView.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16).isActive = true
         timeCardView.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -16).isActive = true
         cell.layoutIfNeeded()
@@ -219,7 +234,8 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         )
         gesture.minimumPressDuration = 0
         labelAndSwitcherWrapper.addGestureRecognizer(gesture)
-        return TimeCard(view: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, open: false)
+        let timeCardHead = TimeCardHead(selfView: labelAndSwitcherWrapper, switcher: switcher)
+        return TimeCard(view: labelAndSwitcherWrapper, head: timeCardHead, timeCells: nil, foot: nil, open: false)
 //        return TimeCard(_self: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
     }
     
@@ -298,7 +314,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         timeCard.addArrangedSubview(expandTriggerWrapper)
         timeCard.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
         
-        let timeCardHead = TimeCardHead(selfView: labelAndSwitcherWrapper)
+        let timeCardHead = TimeCardHead(selfView: labelAndSwitcherWrapper, switcher: switcher)
         let timeCardTimeCells = TimeCardTimeCells(selfView: expandView, height: timeCellsHeight, heightConstraints: timeCellsHeightConstraints)
         let timeCardFoot = TimeCardFoot(selfView: expandTriggerWrapper, pullIcon: imageView)
         return TimeCard(view: timeCard, head: timeCardHead, timeCells: timeCardTimeCells, foot: timeCardFoot, open: false)
@@ -479,17 +495,49 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         guard let view = sender.view else {
             return
         }
-        print("--- tapped index: ", view.tag)
+        guard let topAnchor = self.timeCardList[view.tag].topAnchor, let topAnchorInit = self.timeCardList[view.tag].topAnchorInit else {
+            return
+        }
+        let switcher = self.timeCardList[view.tag].head?.switcher ?? nil
+        let move: CGFloat = 2
         switch sender.state {
         case .began:
-            print("---began")
-//            timeCardView.topAnchor.constraint
+            if switcher != nil {
+                let size = switcher!.frame.size
+                let point = sender.location(in: switcher)
+                // switch切り替えやすいように広めに有効範囲をとる
+                if -10 <= point.x && -10 <= point.y && point.x <= size.width+10 && point.y <= size.height+10 {
+                    return
+                }
+            }
+            topAnchor.constant += move
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            })
         case .ended:
-            print("---end")
+            if switcher != nil {
+                let size = switcher!.frame.size
+                let point = sender.location(in: switcher!)
+                // switch切り替えやすいように広めに有効範囲をとる
+                if -10 <= point.x && -10 <= point.y && point.x <= size.width+10 && point.y <= size.height+10 {
+                    switcher!.setOn(!switcher!.isOn, animated: true)
+                    let generator = UIImpactFeedbackGenerator(style: .light)
+                    generator.impactOccurred()
+                    topAnchor.constant = topAnchorInit
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.view.layoutIfNeeded()
+                    })
+                    return
+                }
+            }
+            self.performSegue(withIdentifier: "locateSetting", sender: nil)
+            topAnchor.constant = topAnchorInit
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            })
         default:
-            print("---default")
+            return
         }
-//        self.performSegue(withIdentifier: "locateSetting", sender: nil)
     }
 
     /*
