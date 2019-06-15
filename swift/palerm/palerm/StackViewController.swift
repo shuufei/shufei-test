@@ -499,7 +499,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             return
         }
         let switcher = self.timeCardList[view.tag].head?.switcher ?? nil
-        let move: CGFloat = 2
+        let move: CGFloat = 3
         switch sender.state {
         case .began:
             if switcher != nil {
