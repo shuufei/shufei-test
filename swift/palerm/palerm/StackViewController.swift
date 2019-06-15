@@ -8,16 +8,67 @@
 
 import UIKit
 
-struct TimeCard {
-    var _self: UIStackView?
-    let head: UIStackView?
-    let timeCells: UIStackView?
-    let foot: UIView?
-    let timeCellsHeight: CGFloat?
-    let timeCellsHeightConstraints: NSLayoutConstraint?
-    var open: Bool
-    let pullIcon: UIImageView?
+struct TimeCardHead {
+    let selfView: UIStackView
 }
+
+struct TimeCardTimeCells {
+    let selfView: UIStackView
+    var height: CGFloat? = nil
+    var heightConstraints: NSLayoutConstraint? = nil
+    
+    mutating func setHeight(height: CGFloat) {
+        self.height = height
+    }
+    
+    mutating func setHeightConstraints(constraints: NSLayoutConstraint) {
+        self.heightConstraints = constraints
+    }
+}
+
+struct TimeCardFoot {
+    let selfView: UIStackView
+    var pullIcon: UIImageView? = nil
+    
+    mutating func setPullIcon(pullIcon: UIImageView) {
+        self.pullIcon = pullIcon
+    }
+}
+
+class TimeCard {
+    let selfView: UIStackView
+    var head: TimeCardHead? = nil
+    var timeCells: TimeCardTimeCells? = nil
+    var foot: TimeCardFoot? = nil
+    var open: Bool = false
+//    var timeCellsHeight: CGFloat? = nil
+//    var timeCellsHeightConstraints: NSLayoutConstraint? = nil
+//    var pullIcon: UIImageView? = nil
+    
+    init(view: UIStackView) {
+        self.selfView = view
+    }
+    
+    init(view: UIStackView, head: TimeCardHead?, timeCells: TimeCardTimeCells?, foot: TimeCardFoot?, open: Bool) {
+        self.selfView = view
+        self.head = head
+        self.timeCells = timeCells
+        self.foot = foot
+        self.open = open
+    }
+    
+}
+
+//struct TimeCard {
+//    var _self: UIStackView?
+//    let head: UIStackView?
+//    let timeCells: UIStackView?
+//    let foot: UIView?
+//    let timeCellsHeight: CGFloat?
+//    let timeCellsHeightConstraints: NSLayoutConstraint?
+//    var open: Bool
+//    let pullIcon: UIImageView?
+//}
 
 let alertTimesList = [
     ["08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"],
@@ -29,7 +80,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBOutlet weak var tableView: UITableView!
     
-    var timeCard1 = TimeCard(_self: nil, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
+//    var timeCard1 = TimeCard(_self: nil, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
     var timeCardList: [TimeCard] = []
     let labelSpace: CGFloat = 6
     let timeLabelMaxCount = 4
@@ -51,7 +102,12 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
             if let _timeCard = timeCard {
                 if let expandTrigger = _timeCard.foot {
-                    expandTrigger.tag = index
+                    expandTrigger.selfView.tag = index
+                }
+                if alertTimes.count == 1 {
+                    _timeCard.selfView.tag = index
+                } else if 1 < alertTimes.count {
+                    _timeCard.head!.selfView.tag = index
                 }
                 self.timeCardList.append(_timeCard)
             }
@@ -89,22 +145,21 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.selectionStyle = .none
         cell.clipsToBounds = false
         cell.layer.zPosition = CGFloat(1 * index)
-        if let timeCardView = self.timeCardList[index]._self {
-            var y: CGFloat = 5
-            if index == 0 {
-                y += 11
-            }
-            timeCardView.frame.origin = CGPoint(x: 0, y: y)
-            timeCardView.center.x = self.view.center.x
-            cell.addSubview(timeCardView)
-            var topMargin: CGFloat = 5
-            if index == 0 {
-                topMargin += 11
-            }
-            timeCardView.topAnchor.constraint(equalTo: cell.topAnchor, constant: topMargin).isActive = true
-            timeCardView.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16).isActive = true
-            timeCardView.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -16).isActive = true
+        let timeCardView = self.timeCardList[index].selfView
+        var y: CGFloat = 5
+        if index == 0 {
+            y += 11
         }
+        timeCardView.frame.origin = CGPoint(x: 0, y: y)
+        timeCardView.center.x = self.view.center.x
+        cell.addSubview(timeCardView)
+        var topMargin: CGFloat = 5
+        if index == 0 {
+            topMargin += 11
+        }
+        timeCardView.topAnchor.constraint(equalTo: cell.topAnchor, constant: topMargin).isActive = true
+        timeCardView.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16).isActive = true
+        timeCardView.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -16).isActive = true
         cell.layoutIfNeeded()
         return cell
     }
@@ -116,30 +171,28 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if index == 0 {
                 padding += 11
             }
-//            print("--- return height for row: \(index), \(String(describing: self.timeCardList[index]._self?.frame.height))")
-            return (self.timeCardList[index]._self?.frame.height)!+padding
-//            return (self.timeCardList[index]._self?.heightAnchor)!+padding
+            return (self.timeCardList[index].selfView.frame.height)+padding
         }
-        var height: CGFloat = self.timeCardList[index].head!.frame.height
-        if let foot = self.timeCardList[index].foot {
+        var height: CGFloat = self.timeCardList[index].head!.selfView.frame.height
+        if let foot = self.timeCardList[index].foot?.selfView {
             height += foot.frame.height
         }
-        if self.timeCardList[index]._self != nil {
-            var padding: CGFloat = 10
-            if index == 0 {
-                padding += 11
-            }
-            height += padding
-            var expandHeight: CGFloat = 0
-            if self.timeCardList[index].timeCellsHeight != nil && self.timeCardList[index].open {
-                expandHeight += self.timeCardList[index].timeCellsHeight!
-            }
-            height += expandHeight
-            print("--- return height for row: \(index), \(height)")
-            return height
-        } else {
-            return 0
+//        if self.timeCardList[index].selfView != nil {
+//        } else {
+//            return 0
+//        }
+        var padding: CGFloat = 10
+        if index == 0 {
+            padding += 11
         }
+        height += padding
+        var expandHeight: CGFloat = 0
+        if self.timeCardList[index].timeCells?.height != nil && self.timeCardList[index].open {
+            expandHeight += self.timeCardList[index].timeCells!.height!
+        }
+        height += expandHeight
+        print("--- return height for row: \(index), \(height)")
+        return height
     }
     
     func createTimeCard(time: String) -> TimeCard {
@@ -160,11 +213,14 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabel)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
-        labelAndSwitcherWrapper.addGestureRecognizer(UITapGestureRecognizer(
+        let gesture = UILongPressGestureRecognizer(
             target: self,
             action: #selector(self.locateSetting(_:))
-        ))
-        return TimeCard(_self: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
+        )
+        gesture.minimumPressDuration = 0
+        labelAndSwitcherWrapper.addGestureRecognizer(gesture)
+        return TimeCard(view: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, open: false)
+//        return TimeCard(_self: labelAndSwitcherWrapper, head: nil, timeCells: nil, foot: nil, timeCellsHeight: nil, timeCellsHeightConstraints: nil, open: false, pullIcon: nil)
     }
     
     func createTimeCard(times: [String]) -> TimeCard {
@@ -186,10 +242,16 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         labelAndSwitcherWrapper.addBackground(PalermColor.Dark500.UIColor, 5, true)
         labelAndSwitcherWrapper.addArrangedSubview(timeLabelStackWrapper)
         labelAndSwitcherWrapper.addArrangedSubview(switcher)
-        labelAndSwitcherWrapper.addGestureRecognizer(UITapGestureRecognizer(
+        let gesture = UILongPressGestureRecognizer(
             target: self,
             action: #selector(self.locateSetting(_:))
-        ))
+        )
+        gesture.minimumPressDuration = 0
+        labelAndSwitcherWrapper.addGestureRecognizer(gesture)
+//        labelAndSwitcherWrapper.addGestureRecognizer(UITapGestureRecognizer(
+//            target: self,
+//            action: #selector(self.locateSetting(_:))
+//        ))
 
         // create expand view
         let expandView = self.createTimeCardExpandView(times: times, width: labelAndSwitcherWrapper.frame.width)
@@ -235,7 +297,12 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         timeCard.addArrangedSubview(expandView)
         timeCard.addArrangedSubview(expandTriggerWrapper)
         timeCard.addBackground(PalermColor.Dark500.UIColor, 5, false, true)
-        return TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: expandView, foot: expandTriggerWrapper, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
+        
+        let timeCardHead = TimeCardHead(selfView: labelAndSwitcherWrapper)
+        let timeCardTimeCells = TimeCardTimeCells(selfView: expandView, height: timeCellsHeight, heightConstraints: timeCellsHeightConstraints)
+        let timeCardFoot = TimeCardFoot(selfView: expandTriggerWrapper, pullIcon: imageView)
+        return TimeCard(view: timeCard, head: timeCardHead, timeCells: timeCardTimeCells, foot: timeCardFoot, open: false)
+//        return TimeCard(_self: timeCard, head: labelAndSwitcherWrapper, timeCells: expandView, foot: expandTriggerWrapper, timeCellsHeight: timeCellsHeight, timeCellsHeightConstraints: timeCellsHeightConstraints, open: false, pullIcon: imageView)
     }
     
     func createTimeStackList(times: [String]) -> UIStackView {
@@ -326,9 +393,12 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             return
         }
         let timeCard: TimeCard = self.timeCardList[timeCardIndex]
-        guard (timeCard._self != nil), (timeCard.timeCells != nil), (timeCard.timeCellsHeight != nil), (timeCard.timeCellsHeightConstraints != nil), (timeCard.pullIcon != nil) else {
+        guard (timeCard.timeCells != nil), (timeCard.timeCells?.height != nil), (timeCard.timeCells?.heightConstraints != nil), (timeCard.foot != nil), (timeCard.foot?.pullIcon != nil) else {
             return
         }
+//        guard (timeCard.selfView != nil), (timeCard.timeCells != nil), (timeCard.timeCellsHeight != nil), (timeCard.timeCellsHeightConstraints != nil), (timeCard.pullIcon != nil) else {
+//            return
+//        }
         if !timeCard.open {
             self.tableView.beginUpdates()
             self.toggleOpen(timeCard: &self.timeCardList[timeCardIndex])
@@ -336,25 +406,25 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //            self.view.layoutIfNeeded()
 //            self.toggleOpen(timeCard: &self.timeCardList[timeCardIndex])
 //            self.tableView.reloadRows(at: [NSIndexPath(row: timeCardIndex, section: 0) as IndexPath], with: .automatic)
-            timeCard.timeCellsHeightConstraints?.constant = timeCard.timeCellsHeight ?? 0
-            timeCard.timeCells?.alpha = 1
-            timeCard.pullIcon?.transform = CGAffineTransform(rotationAngle: CGFloat(180*CGFloat.pi/180))
+            timeCard.timeCells!.heightConstraints!.constant = timeCard.timeCells!.height!
+            timeCard.timeCells!.selfView.alpha = 1
+            timeCard.foot!.pullIcon!.transform = CGAffineTransform(rotationAngle: CGFloat(180*CGFloat.pi/180))
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
-                let point = timeCard._self!.frame.origin
-                timeCard._self!.frame = CGRect(x:point.x, y:point.y, width: timeCard.timeCells!.frame.width, height: timeCard._self!.frame.height+timeCard.timeCellsHeight!)
+                let point = timeCard.selfView.frame.origin
+                timeCard.selfView.frame = CGRect(x:point.x, y:point.y, width: timeCard.timeCells!.selfView.frame.width, height: timeCard.selfView.frame.height+timeCard.timeCells!.height!)
                 self.view.layoutIfNeeded()
             }, completion: nil)
         } else {
-            timeCard.timeCellsHeightConstraints!.constant = 0
-            timeCard.pullIcon!.transform = CGAffineTransform(rotationAngle: CGFloat(0*CGFloat.pi/180))
+            timeCard.timeCells!.heightConstraints!.constant = 0
+            timeCard.foot!.pullIcon!.transform = CGAffineTransform(rotationAngle: CGFloat(0*CGFloat.pi/180))
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
-                let point = timeCard._self!.frame.origin
-                timeCard._self!.frame = CGRect(x:point.x, y:point.y, width: timeCard.timeCells!.frame.width, height: timeCard._self!.frame.height-timeCard.timeCellsHeight!)
+                let point = timeCard.selfView.frame.origin
+                timeCard.selfView.frame = CGRect(x:point.x, y:point.y, width: timeCard.timeCells!.selfView.frame.width, height: timeCard.selfView.frame.height-timeCard.timeCells!.height!)
                 self.view.layoutIfNeeded()
                 self.tableView.beginUpdates()
                 self.toggleOpen(timeCard: &self.timeCardList[timeCardIndex])
                 self.tableView.endUpdates()
-                timeCard.timeCells!.alpha = 0
+                timeCard.timeCells!.selfView.alpha = 0
             }, completion: nil)
         }
     }
@@ -405,8 +475,21 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return label
     }
     
-    @objc func locateSetting(_ sender: UIStackView) {
-        self.performSegue(withIdentifier: "locateSetting", sender: nil)
+    @objc func locateSetting(_ sender: UILongPressGestureRecognizer) {
+        guard let view = sender.view else {
+            return
+        }
+        print("--- tapped index: ", view.tag)
+        switch sender.state {
+        case .began:
+            print("---began")
+//            timeCardView.topAnchor.constraint
+        case .ended:
+            print("---end")
+        default:
+            print("---default")
+        }
+//        self.performSegue(withIdentifier: "locateSetting", sender: nil)
     }
 
     /*
