@@ -40,6 +40,17 @@ struct TimeCardFoot {
     }
 }
 
+struct FabButton {
+    let selfView: UIButton
+    var bottomAnchor: NSLayoutConstraint? = nil
+    var bottomAnchorInit: CGFloat? = nil
+    
+    mutating func setBottomAnchor(_ bottomAnchor: NSLayoutConstraint) {
+        self.bottomAnchor = bottomAnchor
+        self.bottomAnchorInit = bottomAnchor.constant
+    }
+}
+
 class TimeCard {
     let selfView: UIStackView
     var head: TimeCardHead? = nil
@@ -96,6 +107,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var timeCardList: [TimeCard] = []
     let labelSpace: CGFloat = 6
     let timeLabelMaxCount = 4
+    var fabButton: FabButton? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,6 +138,8 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         
+        self.setFabButton()
+        
 //        let times: [String] = [
 //            //            "08:00", "08:05", "08:10", "08:15", "08:20", "08:25", "08:30"
 //            "08:00", "08:05", "08:10"
@@ -144,6 +158,32 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //                self.view.addSubview(timeCardView)
 //            }
 //        }
+    }
+    
+    func setFabButton() {
+        let fabButton = UIButton(type: .custom)
+        fabButton.setImage(UIImage(named: "add"), for: .normal)
+        fabButton.backgroundColor = PalermColor.Dark100.UIColor
+        fabButton.layer.masksToBounds = false
+        fabButton.layer.cornerRadius = CGFloat(fabButton.frame.width / 2)
+        fabButton.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
+        fabButton.layer.shadowColor = UIColor.black.cgColor
+        fabButton.layer.shadowOpacity = 0.3
+        fabButton.layer.shadowRadius = 15
+        fabButton.layer.cornerRadius = 30
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(self.navigateSetting(_:)))
+        gesture.minimumPressDuration = 0
+        fabButton.addGestureRecognizer(gesture)
+        self.view.addSubview(fabButton)
+        fabButton.layer.zPosition = 100
+        fabButton.translatesAutoresizingMaskIntoConstraints = false
+        fabButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        fabButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        fabButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
+        let bottomAnchorInit: CGFloat = -32
+        let bottomAnchor = fabButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: bottomAnchorInit)
+        bottomAnchor.isActive = true
+        self.fabButton = FabButton(selfView: fabButton, bottomAnchor: bottomAnchor, bottomAnchorInit: bottomAnchorInit)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -514,6 +554,7 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.layoutIfNeeded()
             })
+            break
         case .ended:
             if switcher != nil {
                 let size = switcher!.frame.size
@@ -535,6 +576,31 @@ class StackViewController: UIViewController, UITableViewDelegate, UITableViewDat
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.layoutIfNeeded()
             })
+            break
+        default:
+            return
+        }
+    }
+    
+    @objc func navigateSetting(_ sender: UILongPressGestureRecognizer) {
+        guard (self.fabButton?.bottomAnchor != nil), (self.fabButton?.bottomAnchorInit != nil) else {
+            return
+        }
+        let move: CGFloat = 3
+        switch sender.state {
+        case .began:
+            self.fabButton!.bottomAnchor!.constant += move
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            })
+            break
+        case .ended:
+            self.fabButton!.bottomAnchor!.constant = self.fabButton!.bottomAnchorInit!
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.layoutIfNeeded()
+            })
+            self.performSegue(withIdentifier: "locateSetting", sender: nil)
+            break
         default:
             return
         }
