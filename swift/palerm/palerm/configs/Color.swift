@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 
 enum PalermColor: String {
+    case Dark50 = "a0a0a0"
     case Dark100 = "505050"
     case Dark200 = "303030"
     case Dark300 = "2a2a2a"

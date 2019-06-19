@@ -125,14 +125,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E2N-eX-27i">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="98"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="tGI-kE-ooQ"/>
-                                </constraints>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROl-Dn-akR">
-                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROl-Dn-akR">
+                                <rect key="frame" x="0.0" y="54" width="414" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="s3p-Ga-ddc"/>
                                 </constraints>
@@ -146,14 +143,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="E2N-eX-27i" firstAttribute="trailing" secondItem="uaO-fd-nuj" secondAttribute="trailing" id="1N1-sK-h8n"/>
-                            <constraint firstItem="E2N-eX-27i" firstAttribute="leading" secondItem="ROl-Dn-akR" secondAttribute="leading" id="BmW-aa-oZO"/>
+                            <constraint firstItem="E2N-eX-27i" firstAttribute="trailing" secondItem="oMx-jg-LPW" secondAttribute="trailing" id="1N1-sK-h8n"/>
+                            <constraint firstItem="E2N-eX-27i" firstAttribute="leading" secondItem="oMx-jg-LPW" secondAttribute="leading" id="BmW-aa-oZO"/>
                             <constraint firstItem="ROl-Dn-akR" firstAttribute="leading" secondItem="uaO-fd-nuj" secondAttribute="leading" id="FSu-PW-hJk"/>
                             <constraint firstItem="ROl-Dn-akR" firstAttribute="trailing" secondItem="uaO-fd-nuj" secondAttribute="trailing" id="MUk-Cm-sck"/>
                             <constraint firstItem="E2N-eX-27i" firstAttribute="top" secondItem="oMx-jg-LPW" secondAttribute="top" id="VlM-sa-g47"/>
-                            <constraint firstItem="E2N-eX-27i" firstAttribute="leading" secondItem="uaO-fd-nuj" secondAttribute="leading" id="ddw-g8-Lnn"/>
-                            <constraint firstItem="ROl-Dn-akR" firstAttribute="top" secondItem="uaO-fd-nuj" secondAttribute="top" id="swh-pL-4IP"/>
-                            <constraint firstItem="E2N-eX-27i" firstAttribute="leading" secondItem="oMx-jg-LPW" secondAttribute="leading" id="uI5-oZ-FQG"/>
+                            <constraint firstItem="ROl-Dn-akR" firstAttribute="bottom" secondItem="E2N-eX-27i" secondAttribute="bottom" id="lYP-Vc-oRD"/>
+                            <constraint firstItem="ROl-Dn-akR" firstAttribute="top" secondItem="uaO-fd-nuj" secondAttribute="top" constant="10" id="swh-pL-4IP"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uaO-fd-nuj"/>
                     </view>
