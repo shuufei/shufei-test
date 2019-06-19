@@ -136,42 +136,6 @@ class SettingViewController: UIViewController {
             minute.center = cPoint
             minutesBlock.addSubview(minute)
         }
-
-//        let minute20 = self.createSelectButton(label: String(format: "%02d", 20), size: 50, color: PalermColor.Dark500.UIColor)
-//        let point20 = minutesBlock.convert(CGPoint(x: CGFloat(sqrt(3)/2)*r, y: r/2), from: self.view)
-//        print("--- point20: ", point20)
-//        minute20.center = point20
-//        minutesBlock.addSubview(minute20)
-        
-//        let minute25 = self.createSelectButton(label: String(format: "%02d", 25), size: 50, color: PalermColor.Dark500.UIColor)
-//        let point25 = minutesBlock.convert(CGPoint(x: r/2, y: CGFloat(sqrt(3)/2)*r), from: self.view)
-//        print("--- point25: ", point25)
-//        minute25.center = point25
-//        minutesBlock.addSubview(minute25)
-//
-//        let minute30 = self.createSelectButton(label: String(format: "%02d", 30), size: 50, color: PalermColor.Dark500.UIColor)
-//        let point30 = minutesBlock.convert(CGPoint(x: 0, y: r), from: self.view)
-//        print("--- point30: ", point30)
-//        minute30.center = point30
-//        minutesBlock.addSubview(minute30)
-//
-//        let minute35 = self.createSelectButton(label: String(format: "%02d", 35), size: 50, color: PalermColor.Dark500.UIColor)
-//        let point35 = minutesBlock.convert(CGPoint(x: -r/2, y: CGFloat(sqrt(3)/2)*r), from: self.view)
-//        print("--- point35: ", point35)
-//        minute35.center = point35
-//        minutesBlock.addSubview(minute35)
-//
-//        let minute40 = self.createSelectButton(label: String(format: "%02d", 40), size: 50, color: PalermColor.Dark500.UIColor)
-//        let point40 = minutesBlock.convert(CGPoint(x: -CGFloat(sqrt(3)/2)*r, y: r/2), from: self.view)
-//        print("--- point40: ", point40)
-//        minute40.center = point40
-//        minutesBlock.addSubview(minute40)
-//
-//        let minute45 = self.createSelectButton(label: String(format: "%02d", 45), size: 50, color: PalermColor.Dark500.UIColor)
-//        let point45 = minutesBlock.convert(CGPoint(x: -r, y: 0), from: self.view)
-//        print("--- point45: ", point45)
-//        minute45.center = point45
-//        minutesBlock.addSubview(minute45)
         return
     }
     
