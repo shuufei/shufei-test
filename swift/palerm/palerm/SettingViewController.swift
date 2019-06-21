@@ -17,6 +17,7 @@ class SettingViewController: UIViewController {
     var scrollView: UIScrollView = UIScrollView()
     var hourBlock: UIScrollView? = nil
     var minutesBlock: UIView? = nil
+    var scrollViewContentHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,9 +34,16 @@ class SettingViewController: UIViewController {
     }
     
     func setView() {
-        // TODO: Add ScrollView
+        self.view.addSubview(self.scrollView)
+        self.scrollView.translatesAutoresizingMaskIntoConstraints = false
+        self.scrollView.topAnchor.constraint(equalTo: self.navBar.bottomAnchor).isActive = true
+        self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.setHourBlock()
         self.setMinutesBlock()
+        self.scrollViewContentHeight += 32
+        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.scrollViewContentHeight)
     }
     
     func setHourBlock() {
@@ -44,15 +52,16 @@ class SettingViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = PalermColor.Dark50.UIColor
         label.sizeToFit()
-        self.view.addSubview(label)
+        self.scrollView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: self.scrollView.bottomAnchor, constant: 24).isActive = true
         label.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-        label.topAnchor.constraint(equalTo: self.navBar.bottomAnchor, constant: 24).isActive = true
+        self.scrollViewContentHeight += label.frame.height+24
 
         let hourBlock = UIScrollView()
         hourBlock.contentOffset = CGPoint(x: 0, y: 0)
         hourBlock.showsHorizontalScrollIndicator = false
-        self.view.addSubview(hourBlock)
+        self.scrollView.addSubview(hourBlock)
         hourBlock.translatesAutoresizingMaskIntoConstraints = false
         hourBlock.heightAnchor.constraint(equalToConstant: 60).isActive = true
         hourBlock.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
@@ -75,9 +84,8 @@ class SettingViewController: UIViewController {
         hourBlock.contentSize = CGSize(width: hourStack.frame.width+24, height: hourStack.frame.height)
         hourBlock.addSubview(hourStack)
         self.hourBlock = hourBlock
-//        hourStack.translatesAutoresizingMaskIntoConstraints = false
-//        hourStack.leadingAnchor.constraint(equalTo: hourBlock.leadingAnchor, constant: 12).isActive = true
-//        hourBlock.addSubview(hour)
+        self.view.layoutIfNeeded()
+        self.scrollViewContentHeight += hourBlock.frame.height+12
     }
     
     func createSelectButton(label: String, size: CGFloat, color: UIColor = PalermColor.Dark100.UIColor) -> UIButton {
@@ -98,7 +106,7 @@ class SettingViewController: UIViewController {
         minutesBlock.heightAnchor.constraint(equalToConstant: size).isActive = true
         minutesBlock.backgroundColor = PalermColor.Dark100.UIColor
         minutesBlock.layer.cornerRadius = CGFloat(size / 2)
-        self.view.addSubview(minutesBlock)
+        self.scrollView.addSubview(minutesBlock)
         minutesBlock.topAnchor.constraint(equalTo: self.hourBlock!.bottomAnchor, constant: 32).isActive = true
         minutesBlock.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         let holeSize: CGFloat = 197
@@ -114,6 +122,8 @@ class SettingViewController: UIViewController {
         minutesBlock.layoutIfNeeded()
         
         let r: CGFloat = (((size/2)-(holeSize/2))/2)+(holeSize/2)
+        print("--- r: \(r)")
+        // 中心からの座標
         let points: [CGPoint] = [
             CGPoint(x: 0, y: -r),
             CGPoint(x: r/2, y: -CGFloat(sqrt(3)/2)*r),
@@ -131,11 +141,13 @@ class SettingViewController: UIViewController {
         
         for (i, point) in points.enumerated() {
             let minute = self.createSelectButton(label: String(format: "%02d", i*5), size: 50, color: PalermColor.Dark500.UIColor)
-            let cPoint = minutesBlock.convert(point, from: self.view)
+            let cPoint = minutesBlock.convert(point, from: self.scrollView)
             print("--- point\(i*5): ", cPoint)
             minute.center = cPoint
             minutesBlock.addSubview(minute)
         }
+        self.minutesBlock = minutesBlock
+        self.scrollViewContentHeight += minutesBlock.frame.height+32
         return
     }
     
