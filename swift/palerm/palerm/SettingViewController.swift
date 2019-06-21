@@ -75,7 +75,7 @@ class SettingViewController: UIViewController {
         hourStack.spacing = 6
         var hours: [UIButton] = []
         let size: CGFloat = 48
-        for h in 0...24 {
+        for h in 0...23 {
             let hour = self.createSelectButton(label: String(format: "%02d", h), size: size)
             hours.append(hour)
             hourStack.addArrangedSubview(hour)
@@ -99,6 +99,15 @@ class SettingViewController: UIViewController {
     }
     
     func setMinutesBlock() {
+        let label = UILabel()
+        label.text = "分"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = PalermColor.Dark50.UIColor
+        label.sizeToFit()
+        self.scrollView.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: self.hourBlock!.bottomAnchor, constant: 32).isActive = true
+        label.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
         let size: CGFloat = 337
         let minutesBlock = UIView()
         minutesBlock.translatesAutoresizingMaskIntoConstraints = false
