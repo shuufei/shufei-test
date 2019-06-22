@@ -17,6 +17,7 @@ class SettingViewController: UIViewController {
     var scrollView: UIScrollView = UIScrollView()
     var hourBlock: UIScrollView? = nil
     var minutesBlock: UIView? = nil
+    var loopBlock: UIScrollView? = nil
     var scrollViewContentHeight: CGFloat = 0
     
     override func viewDidLoad() {
@@ -42,7 +43,7 @@ class SettingViewController: UIViewController {
         self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.setHourBlock()
         self.setMinutesBlock()
-//        self.setLoopBlock()
+        self.setLoopBlock()
         self.setCells()
         self.scrollViewContentHeight += 48
         self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.scrollViewContentHeight)
@@ -162,16 +163,61 @@ class SettingViewController: UIViewController {
         return
     }
     
+    func setLoopBlock() {
+        let label = UILabel()
+        label.text = "繰り返し"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = PalermColor.Dark50.UIColor
+        label.sizeToFit()
+        self.scrollView.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 32).isActive = true
+        label.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        self.scrollViewContentHeight += label.frame.height+32
+        
+        let loopBlock = UIScrollView()
+        loopBlock.contentOffset = CGPoint(x: 0, y: 0)
+        loopBlock.showsHorizontalScrollIndicator = false
+        self.scrollView.addSubview(loopBlock)
+        loopBlock.translatesAutoresizingMaskIntoConstraints = false
+        loopBlock.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        loopBlock.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        loopBlock.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        loopBlock.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 12).isActive = true
+        
+        let loopStack = UIStackView()
+        loopStack.axis = .horizontal
+        loopStack.addBackground(PalermColor.Dark500.UIColor)
+        loopStack.distribution = .fillEqually
+        loopStack.spacing = 6
+        let weekStrings = [
+            "日", "月", "火", "水", "木", "金", "土"
+        ]
+        var week: [UIButton] = []
+        let size: CGFloat = 48
+        for weekString in weekStrings {
+            let w = self.createSelectButton(label: weekString, size: size)
+            week.append(w)
+            loopStack.addArrangedSubview(w)
+        }
+        loopStack.frame = CGRect(x: 12, y: 0, width: CGFloat(week.count)*size+CGFloat((week.count-1)*6), height: size)
+        loopBlock.contentSize = CGSize(width: loopStack.frame.width+24, height: loopStack.frame.height)
+        loopBlock.addSubview(loopStack)
+        self.loopBlock = loopBlock
+        self.view.layoutIfNeeded()
+        self.scrollViewContentHeight += loopBlock.frame.height+12
+    }
+    
     func setCells() {
         let borderTop = UIView()
         borderTop.backgroundColor = UIColor(hexString: "404040")
         self.scrollView.addSubview(borderTop)
         borderTop.translatesAutoresizingMaskIntoConstraints = false
-        borderTop.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 32).isActive = true
+        borderTop.topAnchor.constraint(equalTo: self.loopBlock!.bottomAnchor, constant: 24).isActive = true
         borderTop.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         borderTop.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         borderTop.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
-        self.scrollViewContentHeight += 0.5
+        self.scrollViewContentHeight += 0.5+24
 
         let soundCell = UITableViewCell(style: .value1, reuseIdentifier: "sound")
         soundCell.accessoryType = .disclosureIndicator
@@ -187,7 +233,7 @@ class SettingViewController: UIViewController {
         soundCell.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         soundCell.heightAnchor.constraint(equalToConstant: 44).isActive = true
 //        self.scrollViewContentHeight += soundCell.frame.height+32
-        self.scrollViewContentHeight += 44+32
+        self.scrollViewContentHeight += 44
         
         let border = UIView()
         border.backgroundColor = PalermColor.Dark300.UIColor
