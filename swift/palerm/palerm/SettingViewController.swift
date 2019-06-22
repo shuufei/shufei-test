@@ -42,7 +42,9 @@ class SettingViewController: UIViewController {
         self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.setHourBlock()
         self.setMinutesBlock()
-        self.scrollViewContentHeight += 32
+//        self.setLoopBlock()
+        self.setCells()
+        self.scrollViewContentHeight += 48
         self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.scrollViewContentHeight)
     }
     
@@ -158,6 +160,112 @@ class SettingViewController: UIViewController {
         self.minutesBlock = minutesBlock
         self.scrollViewContentHeight += minutesBlock.frame.height+32
         return
+    }
+    
+    func setCells() {
+        let borderTop = UIView()
+        borderTop.backgroundColor = UIColor(hexString: "404040")
+        self.scrollView.addSubview(borderTop)
+        borderTop.translatesAutoresizingMaskIntoConstraints = false
+        borderTop.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 32).isActive = true
+        borderTop.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        borderTop.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        borderTop.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        self.scrollViewContentHeight += 0.5
+
+        let soundCell = UITableViewCell(style: .value1, reuseIdentifier: "sound")
+        soundCell.accessoryType = .disclosureIndicator
+        soundCell.backgroundColor = PalermColor.Dark300.UIColor
+        soundCell.textLabel?.text = "サウンド"
+        soundCell.textLabel?.textColor = UIColor(hexString: "efefef")
+        soundCell.detailTextLabel?.text = "alerm"
+        soundCell.detailTextLabel?.textColor = UIColor(hexString: "8E8E93")
+        self.scrollView.addSubview(soundCell)
+        soundCell.translatesAutoresizingMaskIntoConstraints = false
+        soundCell.topAnchor.constraint(equalTo: borderTop.bottomAnchor).isActive = true
+        soundCell.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        soundCell.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        soundCell.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//        self.scrollViewContentHeight += soundCell.frame.height+32
+        self.scrollViewContentHeight += 44+32
+        
+        let border = UIView()
+        border.backgroundColor = PalermColor.Dark300.UIColor
+        self.scrollView.addSubview(border)
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.topAnchor.constraint(equalTo: soundCell.bottomAnchor).isActive = true
+        border.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        border.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        border.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        let innerBorder = UIView()
+        innerBorder.backgroundColor = UIColor(hexString: "404040")
+        border.addSubview(innerBorder)
+        innerBorder.translatesAutoresizingMaskIntoConstraints = false
+        innerBorder.topAnchor.constraint(equalTo: border.topAnchor).isActive = true
+        innerBorder.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        innerBorder.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        innerBorder.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        self.scrollViewContentHeight += 0.5
+        
+        let snoozeCell = UITableViewCell(style: .value1, reuseIdentifier: "snooze")
+        snoozeCell.backgroundColor = PalermColor.Dark300.UIColor
+        snoozeCell.accessoryView = UISwitch()
+        snoozeCell.selectionStyle = .none
+        snoozeCell.textLabel?.text = "スヌーズ"
+        snoozeCell.textLabel?.textColor = UIColor(hexString: "efefef")
+        self.scrollView.addSubview(snoozeCell)
+        snoozeCell.translatesAutoresizingMaskIntoConstraints = false
+        snoozeCell.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
+        snoozeCell.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        snoozeCell.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        snoozeCell.heightAnchor.constraint(equalToConstant: 48).isActive = true
+//        self.scrollViewContentHeight += snoozeCell.frame.height
+        self.scrollViewContentHeight += 48
+        
+        let borderBottom = UIView()
+        borderBottom.backgroundColor = UIColor(hexString: "404040")
+        self.scrollView.addSubview(borderBottom)
+        borderBottom.translatesAutoresizingMaskIntoConstraints = false
+        borderBottom.topAnchor.constraint(equalTo: snoozeCell.bottomAnchor).isActive = true
+        borderBottom.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        borderBottom.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        borderBottom.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        self.scrollViewContentHeight += 0.5
+        
+        
+        let deleteBorderTop = UIView()
+        deleteBorderTop.backgroundColor = UIColor(hexString: "404040")
+        self.scrollView.addSubview(deleteBorderTop)
+        deleteBorderTop.translatesAutoresizingMaskIntoConstraints = false
+        deleteBorderTop.topAnchor.constraint(equalTo: borderBottom.bottomAnchor, constant: 32).isActive = true
+        deleteBorderTop.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        deleteBorderTop.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        deleteBorderTop.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        self.scrollViewContentHeight += 0.5
+
+        let deleteCell = UITableViewCell(style: .default, reuseIdentifier: "delete")
+        deleteCell.backgroundColor = PalermColor.Dark300.UIColor
+        deleteCell.textLabel?.text = "アラームを削除"
+        deleteCell.textLabel?.textColor = .red
+        deleteCell.textLabel?.textAlignment = .center
+        self.scrollView.addSubview(deleteCell)
+        deleteCell.translatesAutoresizingMaskIntoConstraints = false
+        deleteCell.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        deleteCell.topAnchor.constraint(equalTo: deleteBorderTop.bottomAnchor).isActive = true
+        deleteCell.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        deleteCell.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+//        self.scrollViewContentHeight += deleteCell.frame.height+16
+        self.scrollViewContentHeight += 44+32
+        
+        let delteBorderBottom = UIView()
+        delteBorderBottom.backgroundColor = UIColor(hexString: "404040")
+        self.scrollView.addSubview(delteBorderBottom)
+        delteBorderBottom.translatesAutoresizingMaskIntoConstraints = false
+        delteBorderBottom.topAnchor.constraint(equalTo: deleteCell.bottomAnchor).isActive = true
+        delteBorderBottom.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        delteBorderBottom.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        delteBorderBottom.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        self.scrollViewContentHeight += 0.5
     }
     
     @objc func cancel(_ sender: UIButton) {
