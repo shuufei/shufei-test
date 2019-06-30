@@ -89,23 +89,35 @@ class SettingViewController: UIViewController {
         hourBlock.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         hourBlock.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 12).isActive = true
         
+        let format = DateFormatter()
+        format.dateFormat = DateFormatter.dateFormat(fromTemplate: "H", options: 0, locale: .current)
+        let hh = format.string(from: Date())
+        
         let hourStack = UIStackView()
         hourStack.axis = .horizontal
         hourStack.addBackground(PalermColor.Dark500.UIColor)
         hourStack.distribution = .fillEqually
-        hourStack.spacing = 6
+        let stackSpacing: CGFloat = 6
+        hourStack.spacing = stackSpacing
         var hours: [UIButton] = []
         let size: CGFloat = 48
+        let stackPadding: CGFloat = 12
         for h in 0...23 {
-            let hour = self.createSelectButton(label: String(format: "%02d", h), size: size, type: .Hour)
-            hour.tag = h
+            let label = String(format: "%02d", h)
+            let hour = self.createSelectButton(label: label, size: size, type: .Hour)
+            if label == hh {
+                self.currentHour = label
+                hour.setOn(true)
+                let xOffset = ((size+stackSpacing)*CGFloat(h)) - (self.view.center.x) + (size/2) + (stackPadding)
+                hourBlock.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
+            }
             self.hourList.append(hour)
             hour.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapped(_:))))
             hours.append(hour)
             hourStack.addArrangedSubview(hour)
         }
-        hourStack.frame = CGRect(x: 12, y: 0, width: CGFloat(hours.count)*size+CGFloat((hours.count-1)*6), height: size)
-        hourBlock.contentSize = CGSize(width: hourStack.frame.width+24, height: hourStack.frame.height)
+        hourStack.frame = CGRect(x: stackPadding, y: 0, width: CGFloat(hours.count)*size+CGFloat((hours.count-1)*6), height: size)
+        hourBlock.contentSize = CGSize(width: hourStack.frame.width+(stackPadding*2), height: hourStack.frame.height)
         hourBlock.addSubview(hourStack)
         self.hourBlock = hourBlock
         self.view.layoutIfNeeded()
