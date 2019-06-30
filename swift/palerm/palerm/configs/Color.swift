@@ -16,6 +16,7 @@ enum PalermColor: String {
     case Dark300 = "2a2a2a"
     case Dark400 = "202020"
     case Dark500 = "1a1a1a"
+    case Blue = "0d84fa"
     
     var UIColor: UIKit.UIColor {
         return UIKit.UIColor(hexString: self.rawValue)!

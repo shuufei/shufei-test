@@ -8,6 +8,18 @@
 
 import UIKit
 
+struct AlermTime {
+//    let time: String
+    let hour: String
+    let min: String
+    
+    var time: String {
+        get {
+            return "\(self.hour):\(self.min)"
+        }
+    }
+}
+
 class SettingViewController: UIViewController {
 
     @IBOutlet weak var cancelButton: UIBarButtonItem!
@@ -19,6 +31,12 @@ class SettingViewController: UIViewController {
     var minutesBlock: UIView? = nil
     var loopBlock: UIScrollView? = nil
     var scrollViewContentHeight: CGFloat = 0
+    
+    var hourList: [CircleCustomButton] = []
+    var minList: [CircleCustomButton] = []
+    var currentHour: String = ""
+    var alermTimeList: [AlermTime] = []
+    var loopList: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,7 +97,10 @@ class SettingViewController: UIViewController {
         var hours: [UIButton] = []
         let size: CGFloat = 48
         for h in 0...23 {
-            let hour = self.createSelectButton(label: String(format: "%02d", h), size: size)
+            let hour = self.createSelectButton(label: String(format: "%02d", h), size: size, type: .Hour)
+            hour.tag = h
+            self.hourList.append(hour)
+            hour.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapped(_:))))
             hours.append(hour)
             hourStack.addArrangedSubview(hour)
         }
@@ -91,13 +112,79 @@ class SettingViewController: UIViewController {
         self.scrollViewContentHeight += hourBlock.frame.height+12
     }
     
-    func createSelectButton(label: String, size: CGFloat, color: UIColor = PalermColor.Dark100.UIColor) -> UIButton {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: size, height: size))
-        button.layer.cornerRadius = size / 2
-        button.backgroundColor = color
-        button.setTitle(label, for: .normal)
-        button.setTitleColor(PalermColor.Dark50.UIColor, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+    @objc func tapped(_ sender: UITapGestureRecognizer) {
+        guard let button = sender.view as? CircleCustomButton else {
+            return
+        }
+        switch button.type {
+        case .Hour:
+            self.currentHour = button.titleLabel?.text ?? ""
+            self.changeHour()
+            break
+        case .Minute:
+            guard self.currentHour != "", let min = button.titleLabel?.text else {
+                return
+            }
+            if button.active {
+                for (index, alermTime) in self.alermTimeList.enumerated() {
+                    if alermTime.hour == self.currentHour, alermTime.min == min {
+                        self.alermTimeList.remove(at: index)
+                        button.toggle(button)
+                        break
+                    }
+                }
+            } else {
+                self.alermTimeList.append(AlermTime(hour: self.currentHour, min: min))
+                button.toggle(button)
+            }
+            break
+        case .Week:
+            guard let w = button.titleLabel?.text else {
+                return
+            }
+            if button.active {
+                for (index, week) in loopList.enumerated() {
+                    if week == w {
+                        self.loopList.remove(at: index)
+                        break
+                    }
+                }
+            } else {
+                self.loopList.append(w)
+            }
+            button.toggle(button)
+            break
+        }
+        for alermTime in self.alermTimeList {
+            print("time list: ", alermTime.time)
+        }
+        print("loop list: ", self.loopList)
+    }
+    
+    func changeHour() {
+        for h in self.hourList {
+            guard let label = h.titleLabel?.text, label != self.currentHour else {
+                h.setOn(true)
+                continue
+            }
+            h.setOn(false)
+        }
+        for min in self.minList {
+            guard let label = min.titleLabel?.text else {
+                continue
+            }
+            var on = false
+            for alermTime in self.alermTimeList {
+                if self.currentHour == alermTime.hour, alermTime.min == label {
+                    on = true
+                }
+            }
+            min.setOn(on)
+        }
+    }
+    
+    func createSelectButton(label: String, size: CGFloat, color: UIColor = PalermColor.Dark100.UIColor, type: CircleCustomButtonType) -> CircleCustomButton {
+        let button = CircleCustomButton(size: size, color: color, label: label, type: type)
         return button
     }
     
@@ -134,7 +221,7 @@ class SettingViewController: UIViewController {
         minutesBlock.layoutIfNeeded()
         
         let r: CGFloat = (((size/2)-(holeSize/2))/2)+(holeSize/2)
-        print("--- r: \(r)")
+//        print("--- r: \(r)")
         // 中心からの座標
         let points: [CGPoint] = [
             CGPoint(x: 0, y: -r),
@@ -152,9 +239,11 @@ class SettingViewController: UIViewController {
         ]
         
         for (i, point) in points.enumerated() {
-            let minute = self.createSelectButton(label: String(format: "%02d", i*5), size: 50, color: PalermColor.Dark500.UIColor)
+            let minute = self.createSelectButton(label: String(format: "%02d", i*5), size: 50, color: PalermColor.Dark500.UIColor, type: .Minute)
+            self.minList.append(minute)
             let cPoint = minutesBlock.convert(point, from: self.scrollView)
-            print("--- point\(i*5): ", cPoint)
+//            print("--- point\(i*5): ", cPoint)
+            minute.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapped(_:))))
             minute.center = cPoint
             minutesBlock.addSubview(minute)
         }
@@ -196,7 +285,8 @@ class SettingViewController: UIViewController {
         var week: [UIButton] = []
         let size: CGFloat = 48
         for weekString in weekStrings {
-            let w = self.createSelectButton(label: weekString, size: size)
+            let w = self.createSelectButton(label: weekString, size: size, type: .Week)
+            w.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapped(_:))))
             week.append(w)
             loopStack.addArrangedSubview(w)
         }
@@ -329,4 +419,60 @@ class SettingViewController: UIViewController {
     }
     */
 
+}
+
+
+class CircleCustomButton: UIButton {
+    
+    var active = false
+    var color: UIColor
+    var type: CircleCustomButtonType = .Hour
+    
+    init(size: CGFloat, color: UIColor, label: String, type: CircleCustomButtonType = .Hour) {
+        self.active = false
+        self.color = color
+        self.type = type
+        super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
+        self.layer.cornerRadius = size / 2
+        self.backgroundColor = color
+        self.setTitle(label, for: .normal)
+        self.setTitleColor(PalermColor.Dark50.UIColor, for: .normal)
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        self.addTarget(self, action: #selector(self.toggle(_:)), for: .touchUpInside)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func toggle(_ sender: UIButton) {
+        self.active = !self.active
+        self.setOn(self.active)
+//        if self.active {
+//            self.backgroundColor = PalermColor.Blue.UIColor
+//            self.setTitleColor(.white, for: .normal)
+//        } else {
+//            self.backgroundColor = color
+//            self.setTitleColor(PalermColor.Dark50.UIColor, for: .normal)
+//        }
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
+    
+    func setOn(_ on: Bool) {
+        self.active = on
+        if self.active {
+            self.backgroundColor = PalermColor.Blue.UIColor
+            self.setTitleColor(.white, for: .normal)
+        } else {
+            self.backgroundColor = color
+            self.setTitleColor(PalermColor.Dark50.UIColor, for: .normal)
+        }
+    }
+}
+
+enum CircleCustomButtonType {
+    case Hour
+    case Minute
+    case Week
 }
