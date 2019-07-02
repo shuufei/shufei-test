@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 struct AlermTime {
 //    let time: String
@@ -26,6 +28,8 @@ class SettingViewController: UIViewController {
     @IBOutlet weak var navBarBack: UIView!
     @IBOutlet weak var navBar: UINavigationBar!
     
+    let AlermTimesStoreClass = AlermTimesStore()
+    
     var scrollView: UIScrollView = UIScrollView()
     var hourBlock: UIScrollView? = nil
     var minutesBlock: UIView? = nil
@@ -35,8 +39,9 @@ class SettingViewController: UIViewController {
     var hourList: [CircleCustomButton] = []
     var minList: [CircleCustomButton] = []
     var currentHour: String = ""
-    var alermTimeList: [AlermTime] = []
     var loopList: [String] = []
+    
+    var disposable: Disposable? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +51,15 @@ class SettingViewController: UIViewController {
         navBar.tintColor = .white
         self.setButton()
         self.setView()
+        
+        self.disposable = self.AlermTimesStoreClass.list.subscribe(onNext: { alermTimes in
+            print("--- changed alerm time list: ", alermTimes)
+            // TODO: label描画処理
+        })
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.disposable?.dispose()
     }
     
     func setButton() {
@@ -138,16 +152,15 @@ class SettingViewController: UIViewController {
                 return
             }
             if button.active {
-                for (index, alermTime) in self.alermTimeList.enumerated() {
-                    if alermTime.hour == self.currentHour, alermTime.min == min {
-                        self.alermTimeList.remove(at: index)
-                        button.toggle(button)
-                        break
-                    }
+                let removed = self.AlermTimesStoreClass.remove(hour: self.currentHour, min: min)
+                if removed {
+                    button.toggle(button)
                 }
             } else {
-                self.alermTimeList.append(AlermTime(hour: self.currentHour, min: min))
-                button.toggle(button)
+                let appended = self.AlermTimesStoreClass.append(alermTime: AlermTime(hour: self.currentHour, min: min))
+                if appended {
+                    button.toggle(button)
+                }
             }
             break
         case .Week:
@@ -167,9 +180,9 @@ class SettingViewController: UIViewController {
             button.toggle(button)
             break
         }
-        for alermTime in self.alermTimeList {
-            print("time list: ", alermTime.time)
-        }
+//        for alermTime in self.AlermTimesStoreClass.get() {
+//            print("time list: ", alermTime.time)
+//        }
         print("loop list: ", self.loopList)
     }
     
@@ -177,6 +190,7 @@ class SettingViewController: UIViewController {
         for h in self.hourList {
             guard let label = h.titleLabel?.text, label != self.currentHour else {
                 h.setOn(true)
+                h.occureImpact(style: .light)
                 continue
             }
             h.setOn(false)
@@ -186,7 +200,7 @@ class SettingViewController: UIViewController {
                 continue
             }
             var on = false
-            for alermTime in self.alermTimeList {
+            for alermTime in self.AlermTimesStoreClass.get() {
                 if self.currentHour == alermTime.hour, alermTime.min == label {
                     on = true
                 }
@@ -467,8 +481,7 @@ class CircleCustomButton: UIButton {
 //            self.backgroundColor = color
 //            self.setTitleColor(PalermColor.Dark50.UIColor, for: .normal)
 //        }
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
+        self.occureImpact(style: .light)
     }
     
     func setOn(_ on: Bool) {
@@ -480,6 +493,11 @@ class CircleCustomButton: UIButton {
             self.backgroundColor = color
             self.setTitleColor(PalermColor.Dark50.UIColor, for: .normal)
         }
+    }
+    
+    func occureImpact(style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred()
     }
 }
 
