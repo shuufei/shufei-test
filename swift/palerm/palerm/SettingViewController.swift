@@ -33,8 +33,11 @@ class SettingViewController: UIViewController {
     var scrollView: UIScrollView = UIScrollView()
     var hourBlock: UIScrollView? = nil
     var minutesBlock: UIView? = nil
+    var labelsBlock: UIStackView = UIStackView()
     var loopBlock: UIScrollView? = nil
     var scrollViewContentHeight: CGFloat = 0
+    
+    var alermTimeHorizonStacks: [UIStackView] = []
     
     var hourList: [CircleCustomButton] = []
     var minList: [CircleCustomButton] = []
@@ -54,12 +57,46 @@ class SettingViewController: UIViewController {
         
         self.disposable = self.AlermTimesStoreClass.list.subscribe(onNext: { alermTimes in
             print("--- changed alerm time list: ", alermTimes)
-            // TODO: label描画処理
+            self.setAlermTimeLabels(alermTimes)
         })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         self.disposable?.dispose()
+    }
+    
+    func setAlermTimeLabels(_ alermTimes: [AlermTime]) {
+        for horizonStack in self.alermTimeHorizonStacks {
+            horizonStack.removeFromSuperview()
+        }
+        
+        let alermTimeLabelsMaxCount = 3
+        let safeAreaWidth = self.view.frame.width - self.view.safeAreaInsets.left-self.view.safeAreaInsets.right
+        let alermTimeHorizonStackCount = Int(ceil(Double(alermTimes.count) / Double(alermTimeLabelsMaxCount)))
+        for i in 0..<alermTimeHorizonStackCount {
+            let offset = i*alermTimeLabelsMaxCount
+            let tmpAlermTimes = alermTimes.dropFirst(offset).prefix(alermTimeLabelsMaxCount)
+            let sidePadding: CGFloat = 24
+            let row = UIStackView()
+            row.addBackground(.blue)
+            row.axis = .horizontal
+            row.distribution = .equalSpacing
+            row.spacing = 8
+            
+            let alermTimeLabelWidth =  (safeAreaWidth-CGFloat(sidePadding*2)-CGFloat(8*(alermTimeLabelsMaxCount-1)))/3
+            for tmpAlermTime in tmpAlermTimes {
+                print("time: \(tmpAlermTime.time)")
+                let alermTimeLabel = UIView()
+                alermTimeLabel.backgroundColor = UIColor(hexString: "3f3f3f")
+                alermTimeLabel.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                alermTimeLabel.widthAnchor.constraint(equalToConstant: alermTimeLabelWidth).isActive = true
+                row.addArrangedSubview(alermTimeLabel)
+            }
+            self.labelsBlock.addArrangedSubview(row)
+            self.alermTimeHorizonStacks.append(row)
+        }
+        self.view.layoutIfNeeded()
+        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.scrollViewContentHeight + self.labelsBlock.frame.height)
     }
     
     func setButton() {
@@ -75,6 +112,7 @@ class SettingViewController: UIViewController {
         self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.setHourBlock()
         self.setMinutesBlock()
+        self.setLabelsBlock()
         self.setLoopBlock()
         self.setCells()
         self.scrollViewContentHeight += 48
@@ -278,6 +316,23 @@ class SettingViewController: UIViewController {
         return
     }
     
+    func setLabelsBlock() {
+        let labelsBlock = UIStackView()
+        labelsBlock.axis = .vertical
+        labelsBlock.distribution = .fillEqually
+        labelsBlock.alignment = .leading
+        labelsBlock.spacing = 6
+        self.scrollView.addSubview(labelsBlock)
+        labelsBlock.translatesAutoresizingMaskIntoConstraints = false
+        labelsBlock.addBackground(.red)
+//        labelsBlock.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        labelsBlock.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 16).isActive = true
+        labelsBlock.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
+        labelsBlock.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
+        self.labelsBlock = labelsBlock
+        self.scrollViewContentHeight += labelsBlock.frame.height
+    }
+    
     func setLoopBlock() {
         let label = UILabel()
         label.text = "繰り返し"
@@ -286,10 +341,11 @@ class SettingViewController: UIViewController {
         label.sizeToFit()
         self.scrollView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 32).isActive = true
+        label.topAnchor.constraint(equalTo: self.labelsBlock.bottomAnchor, constant: 16).isActive = true
+//        label.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 32).isActive = true
         label.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
         self.scrollViewContentHeight += label.frame.height+32
-        
+
         let loopBlock = UIScrollView()
         loopBlock.contentOffset = CGPoint(x: 0, y: 0)
         loopBlock.showsHorizontalScrollIndicator = false
