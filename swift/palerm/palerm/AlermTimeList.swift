@@ -26,6 +26,7 @@ class AlermTimesStore {
     func append(alermTime: AlermTime) -> Bool {
         var tmpList = self.get()
         tmpList.append(alermTime)
+        tmpList.sort { $0.priority < $1.priority }
         self.set(list: tmpList)
         return true
     }
@@ -40,5 +41,11 @@ class AlermTimesStore {
             }
         }
         return false
+    }
+    
+    func remove(index: Int) -> Bool {
+        let list = self.get()
+        let target = list[index]
+        return self.remove(hour: target.hour, min: target.min)
     }
 }

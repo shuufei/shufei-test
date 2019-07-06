@@ -20,6 +20,12 @@ struct AlermTime {
             return "\(self.hour):\(self.min)"
         }
     }
+    
+    var priority: Int {
+        get {
+            return Int("\(self.hour)\(self.min)")!
+        }
+    }
 }
 
 class SettingViewController: UIViewController {
@@ -69,7 +75,6 @@ class SettingViewController: UIViewController {
         for horizonStack in self.alermTimeHorizonStacks {
             horizonStack.removeFromSuperview()
         }
-        
         let alermTimeLabelsMaxCount = 3
         let safeAreaWidth = self.view.frame.width - self.view.safeAreaInsets.left-self.view.safeAreaInsets.right
         let alermTimeHorizonStackCount = Int(ceil(Double(alermTimes.count) / Double(alermTimeLabelsMaxCount)))
@@ -78,25 +83,64 @@ class SettingViewController: UIViewController {
             let tmpAlermTimes = alermTimes.dropFirst(offset).prefix(alermTimeLabelsMaxCount)
             let sidePadding: CGFloat = 24
             let row = UIStackView()
-            row.addBackground(.blue)
             row.axis = .horizontal
             row.distribution = .equalSpacing
             row.spacing = 8
-            
             let alermTimeLabelWidth =  (safeAreaWidth-CGFloat(sidePadding*2)-CGFloat(8*(alermTimeLabelsMaxCount-1)))/3
-            for tmpAlermTime in tmpAlermTimes {
+            for (index, tmpAlermTime) in tmpAlermTimes.enumerated() {
                 print("time: \(tmpAlermTime.time)")
+                let labelText = UILabel(frame: CGRect(x: 12, y: 9, width: 0, height: 0))
+                labelText.text = tmpAlermTime.time
+                labelText.font = UIFont.systemFont(ofSize: 16)
+                labelText.textColor = UIColor(hexString: "efefef")
+                labelText.sizeToFit()
                 let alermTimeLabel = UIView()
                 alermTimeLabel.backgroundColor = UIColor(hexString: "3f3f3f")
                 alermTimeLabel.heightAnchor.constraint(equalToConstant: 36).isActive = true
                 alermTimeLabel.widthAnchor.constraint(equalToConstant: alermTimeLabelWidth).isActive = true
+                let clearWrapper = self.createAlermTimeLabelClearButton()
+                clearWrapper.frame.origin = CGPoint(x: alermTimeLabelWidth-36, y: 0)
+                clearWrapper.tag = offset+index
+                alermTimeLabel.layer.cornerRadius = 18
+                alermTimeLabel.addSubview(labelText)
+                alermTimeLabel.addSubview(clearWrapper)
                 row.addArrangedSubview(alermTimeLabel)
+                
             }
             self.labelsBlock.addArrangedSubview(row)
             self.alermTimeHorizonStacks.append(row)
         }
         self.view.layoutIfNeeded()
         self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: self.scrollViewContentHeight + self.labelsBlock.frame.height)
+    }
+    
+    func createAlermTimeLabelClearButton() -> UIView {
+        let clearIcon = UIImage(named: "clear")
+        let clearView = UIImageView(image: clearIcon)
+        clearView.frame = CGRect(x: 12, y: 12, width: 12, height: 12)
+        let clearWrapper = UIView(frame: CGRect(x: 0, y: 0, width: 36, height: 36))
+        clearWrapper.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.clearAlermTime(_:))))
+        clearWrapper.addSubview(clearView)
+        return clearWrapper
+    }
+    
+    @objc func clearAlermTime(_ sender: UIGestureRecognizer) {
+        guard let view = sender.view else {
+            return
+        }
+        let list = self.AlermTimesStoreClass.get()
+        let target = list[view.tag]
+        let _ = self.AlermTimesStoreClass.remove(hour: target.hour, min: target.min)
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        if target.hour == self.currentHour { // currentHourが同じならminをoffにする
+            for min in minList {
+                if min.label == target.min {
+                    min.toggle(min)
+                    break
+                }
+            }
+        }
     }
     
     func setButton() {
@@ -321,11 +365,9 @@ class SettingViewController: UIViewController {
         labelsBlock.axis = .vertical
         labelsBlock.distribution = .fillEqually
         labelsBlock.alignment = .leading
-        labelsBlock.spacing = 6
+        labelsBlock.spacing = 8
         self.scrollView.addSubview(labelsBlock)
         labelsBlock.translatesAutoresizingMaskIntoConstraints = false
-        labelsBlock.addBackground(.red)
-//        labelsBlock.heightAnchor.constraint(equalToConstant: 50).isActive = true
         labelsBlock.topAnchor.constraint(equalTo: self.minutesBlock!.bottomAnchor, constant: 16).isActive = true
         labelsBlock.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 24).isActive = true
         labelsBlock.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
@@ -509,11 +551,13 @@ class CircleCustomButton: UIButton {
     var active = false
     var color: UIColor
     var type: CircleCustomButtonType = .Hour
+    var label: String
     
     init(size: CGFloat, color: UIColor, label: String, type: CircleCustomButtonType = .Hour) {
         self.active = false
         self.color = color
         self.type = type
+        self.label = label
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
         self.layer.cornerRadius = size / 2
         self.backgroundColor = color
