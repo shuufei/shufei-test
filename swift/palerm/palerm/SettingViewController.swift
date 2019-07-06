@@ -88,7 +88,6 @@ class SettingViewController: UIViewController {
             row.spacing = 8
             let alermTimeLabelWidth =  (safeAreaWidth-CGFloat(sidePadding*2)-CGFloat(8*(alermTimeLabelsMaxCount-1)))/3
             for (index, tmpAlermTime) in tmpAlermTimes.enumerated() {
-                print("time: \(tmpAlermTime.time)")
                 let labelText = UILabel(frame: CGRect(x: 12, y: 9, width: 0, height: 0))
                 labelText.text = tmpAlermTime.time
                 labelText.font = UIFont.systemFont(ofSize: 16)
