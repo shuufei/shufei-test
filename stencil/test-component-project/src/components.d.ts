@@ -9,6 +9,9 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
+  interface AppFirstComponent {
+    'name': string;
+  }
   interface MyComponent {
     /**
     * The first name
@@ -28,17 +31,27 @@ export namespace Components {
 declare global {
 
 
+  interface HTMLAppFirstComponentElement extends Components.AppFirstComponent, HTMLStencilElement {}
+  var HTMLAppFirstComponentElement: {
+    prototype: HTMLAppFirstComponentElement;
+    new (): HTMLAppFirstComponentElement;
+  };
+
   interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {}
   var HTMLMyComponentElement: {
     prototype: HTMLMyComponentElement;
     new (): HTMLMyComponentElement;
   };
   interface HTMLElementTagNameMap {
+    'app-first-component': HTMLAppFirstComponentElement;
     'my-component': HTMLMyComponentElement;
   }
 }
 
 declare namespace LocalJSX {
+  interface AppFirstComponent extends JSXBase.HTMLAttributes<HTMLAppFirstComponentElement> {
+    'name'?: string;
+  }
   interface MyComponent extends JSXBase.HTMLAttributes<HTMLMyComponentElement> {
     /**
     * The first name
@@ -55,6 +68,7 @@ declare namespace LocalJSX {
   }
 
   interface IntrinsicElements {
+    'app-first-component': AppFirstComponent;
     'my-component': MyComponent;
   }
 }
