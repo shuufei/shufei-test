@@ -1,0 +1,25 @@
+.pump-list {
+  display: flex;
+  width: 100%;
+}
+
+.pump {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: white;
+  margin: 0 12px;
+  cursor: pointer;
+  &.one {
+    background: red;
+  }
+  &.two {
+    background: blue;
+  }
+  &.three {
+    background: green;
+  }
+}
