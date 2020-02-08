@@ -1,26 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { colors } from '../../style-variables';
-import { TodosDispatch } from '../Todos';
+import { Todo } from '../../redux/reducers/todos';
 
-export type Todo = {
-  id: string;
-  title: string;
-  isDone: boolean;
-}
-
-type Props = {
+export type Props = {
   className?: string;
-  isDone: Todo['isDone'];
+  isDone: Todo['completed'];
   id: Todo['id'];
+  onToggle: (id: Todo['id']) => void;
 };
 
-const View: React.FC<Props> = function({className, children, isDone, id}) {
-  const dispatch = useContext(TodosDispatch);
+const View: React.FC<Props> = function({className, children, isDone, id, onToggle}) {
 
   function toggle() {
-    isDone ? dispatch({ type: 'undone', payload: id }) : dispatch({ type: 'done', payload: id });
+    // isDone ? dispatch({ type: 'undone', payload: id }) : dispatch({ type: 'done', payload: id });
+    onToggle(id);
   }
 
   return (

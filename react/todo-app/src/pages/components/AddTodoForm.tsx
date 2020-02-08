@@ -1,21 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { colors } from '../../style-variables';
-import { TodosDispatch } from '../Todos';
 
-type Props = {
+export type Props = {
   className?: string;
+  onSubmit: (text: string) => void;
 };
 
-const View: React.FC<Props> = function({className}) {
+const View: React.FC<Props> = function({className, onSubmit}) {
 
   const [text, setText] = useState('');
-  const dispatch = useContext(TodosDispatch);
 
   return (
     <div className={className}>
       <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-      <button onClick={() => { dispatch({ type: 'add', payload: text }); setText(''); }} disabled={text === ''}>Add</button>
+      <button onClick={() => { onSubmit(text); setText(''); }} disabled={text === ''}>Add</button>
     </div>
   );
 };

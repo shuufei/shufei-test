@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import TodoItem, { Todo } from './TodoItem';
+import TodoItem from './TodoItemContainer';
+import { Todo } from '../../redux/reducers/todos';
 
 type Props = {
   className?: string;
@@ -10,7 +11,7 @@ type Props = {
 const View: React.FC<Props> = function({className, todos}) {
   return (
     <ul className={className}>
-      {todos.map(todo => <TodoItem key={todo.id} id={todo.id} isDone={todo.isDone}>{todo.title}</TodoItem>)}
+      {todos.map(todo => <TodoItem key={todo.id} id={todo.id} isDone={todo.completed}>{todo.text}</TodoItem>)}
     </ul>
   );
 };

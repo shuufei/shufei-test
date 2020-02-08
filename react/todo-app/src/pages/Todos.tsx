@@ -1,26 +1,24 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import TodoList from './components/TodoList';
-import { Todo } from './components/TodoItem';
-import AddTodoForm from './components/AddTodoForm';
+import { Todo } from '../redux/reducers/todos';
+import AddTodoForm from './components/AddTodoFormContainer';
 import * as Reducer from './Reducer';
 
-type Props = {
+export type Props = {
   className?: string;
+  unDoneTasks: Todo[];
+  doneTasks: Todo[];
 }
 
 export const TodosDispatch: React.Context<React.Dispatch<Reducer.Action>> = React.createContext((v: Reducer.Action) => {});
 
 
-const View: React.FC<Props> = function({ className }) {
+const View: React.FC<Props> = function({ className, unDoneTasks, doneTasks }) {
 
-  const [state, dispatch] = useReducer(Reducer.reducer, Reducer.initialState);
-
-  const unDoneTasks: Todo[] = state.todos.filter(v => !v.isDone);
-  const doneTasks: Todo[] = state.todos.filter(v => v.isDone);
+  // const [state, dispatch] = useReducer(Reducer.reducer, Reducer.initialState);
 
   return (
-    <TodosDispatch.Provider value={dispatch}>
       <div className={className}>
         <AddTodoForm></AddTodoForm>
 
@@ -36,7 +34,6 @@ const View: React.FC<Props> = function({ className }) {
         </div>
 
       </div>
-    </TodosDispatch.Provider>
   );
 };
 
