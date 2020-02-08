@@ -2,12 +2,10 @@ import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 
 import { RootState } from '../redux/reducers/index';
-import Todos, { Props } from './Todos';
+import Todos from './Todos';
 
-const mapStateToProps: (s: RootState) => Pick<Props, 'doneTasks' | 'unDoneTasks'> = (state) => {
+const mapStateToProps: (s: RootState) => {} = (state) => {
   return {
-    doneTasks: state.todos.todos.filter(v => v.completed),
-    unDoneTasks: state.todos.todos.filter(v => !v.completed)
   };
 };
 

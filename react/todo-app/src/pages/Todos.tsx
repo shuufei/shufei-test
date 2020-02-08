@@ -1,22 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import TodoList from './components/TodoList';
-import { Todo } from '../redux/reducers/todos';
 import AddTodoForm from './components/AddTodoFormContainer';
 import * as Reducer from './Reducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/reducers';
 
 export type Props = {
   className?: string;
-  unDoneTasks: Todo[];
-  doneTasks: Todo[];
 }
 
 export const TodosDispatch: React.Context<React.Dispatch<Reducer.Action>> = React.createContext((v: Reducer.Action) => {});
 
 
-const View: React.FC<Props> = function({ className, unDoneTasks, doneTasks }) {
+const View: React.FC<Props> = function({ className }) {
 
-  // const [state, dispatch] = useReducer(Reducer.reducer, Reducer.initialState);
+  const unDoneTasks = useSelector((state: RootState) => state.todos.todos.filter(v => !v.completed));
+  const doneTasks = useSelector((state: RootState) => state.todos.todos.filter(v => v.completed));
 
   return (
       <div className={className}>

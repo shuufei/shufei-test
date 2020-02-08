@@ -14,7 +14,6 @@ export type Props = {
 const View: React.FC<Props> = function({className, children, isDone, id, onToggle}) {
 
   function toggle() {
-    // isDone ? dispatch({ type: 'undone', payload: id }) : dispatch({ type: 'done', payload: id });
     onToggle(id);
   }
 

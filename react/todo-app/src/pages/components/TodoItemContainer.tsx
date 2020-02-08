@@ -1,22 +1,14 @@
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { actionCreator } from '../../redux/reducers/index';
 import TodoItem, { Props } from './TodoItem';
 
-const mapStateToProps = () => {
-  return {};
-};
-
-const mapDispatchToProps: (d: Dispatch<Action>) => Pick<Props, 'onToggle'> = (dispatch: Dispatch<Action>) => {
-  return {
-    onToggle: (id) => {
-      dispatch(actionCreator.todos.toggleTodo({id}));
-    }
-  }
+const View: React.FC<Omit<Props, 'onToggle'>> = function(props) {
+  const dispatch = useDispatch();
+  return (
+    <TodoItem {...props} onToggle={(id) => dispatch(actionCreator.todos.toggleTodo({id}))}></TodoItem>
+  );
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TodoItem);
+export default View;

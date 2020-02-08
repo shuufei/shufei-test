@@ -1,22 +1,14 @@
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { actionCreator } from '../../redux/reducers/index';
-import AddTodoForm, { Props } from './AddTodoForm';
+import AddTodoForm from './AddTodoForm';
 
-const mapStateToProps = () => {
-  return {};
+const View: React.FC<{}> = function() {
+  const dispatch = useDispatch();
+  return (
+    <AddTodoForm onSubmit={(text) => dispatch(actionCreator.todos.addTodo({text}))}></AddTodoForm>
+  );
 };
 
-const mapDispatchToProps: (d: Dispatch<Action>) => Props = (dispatch: Dispatch<Action>) => {
-  return {
-    onSubmit: (text: string) => {
-      dispatch(actionCreator.todos.addTodo({text}))
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddTodoForm);
+export default View;
