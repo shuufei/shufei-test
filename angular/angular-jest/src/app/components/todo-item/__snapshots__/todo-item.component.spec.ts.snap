@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TodoItemComponent isCompletedがfalseの状態でtoggleボタンを押下したとき、状態表示部分に 'completed' が表示される 1`] = `
+<app-todo-item
+  state={[Function Object]}
+>
+  <h1
+    class="title"
+  >
+    
+  </h1><span
+    class="completed"
+  >
+    completed
+  </span><button
+    class="toggle-button"
+  >
+    toggle!
+  </button>
+</app-todo-item>
+`;
+
+exports[`TodoItemComponent isCompletedがtrueの状態でtoggleボタンを押下したとき、状態表示部分に 'todo' が表示される 1`] = `
+<app-todo-item
+  state={[Function Object]}
+>
+  <h1
+    class="title"
+  >
+    
+  </h1><span
+    class="completed"
+  >
+    todo
+  </span><button
+    class="toggle-button"
+  >
+    toggle!
+  </button>
+</app-todo-item>
+`;
+
+exports[`TodoItemComponent コンポーネントに指定したタイトルが表示される 1`] = `
+<app-todo-item
+  state={[Function Object]}
+>
+  <h1
+    class="title"
+  >
+    hanashiro
+  </h1><span
+    class="completed"
+  >
+    todo
+  </span><button
+    class="toggle-button"
+  >
+    toggle!
+  </button>
+</app-todo-item>
+`;
+
+exports[`TodoItemComponent コンポーネントのisCompletedにfalseを指定したとき、状態表示部分に 'todo' が表示される 1`] = `
+<app-todo-item
+  state={[Function Object]}
+>
+  <h1
+    class="title"
+  >
+    
+  </h1><span
+    class="completed"
+  >
+    todo
+  </span><button
+    class="toggle-button"
+  >
+    toggle!
+  </button>
+</app-todo-item>
+`;
+
+exports[`TodoItemComponent コンポーネントのisCompletedにtrueを指定したとき、状態表示部分に 'completed' が表示される 1`] = `
+<app-todo-item
+  state={[Function Object]}
+>
+  <h1
+    class="title"
+  >
+    
+  </h1><span
+    class="completed"
+  >
+    completed
+  </span><button
+    class="toggle-button"
+  >
+    toggle!
+  </button>
+</app-todo-item>
+`;
