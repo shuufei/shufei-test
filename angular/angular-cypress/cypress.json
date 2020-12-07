@@ -2,5 +2,6 @@
   "fixturesFolder": "./cypress/fixtures",
   "integrationFolder": "./cypress/integration",
   "pluginsFile": "./cypress/plugins/index",
-  "supportFile": "./cypress/support/index"
+  "supportFile": "./cypress/support/index",
+  "projectId": "5m9dra"
 }
