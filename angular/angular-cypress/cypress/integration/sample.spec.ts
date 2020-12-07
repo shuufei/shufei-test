@@ -6,6 +6,8 @@ describe('My First Test', () => {
 
     cy.url().should('include', '/commands/actions');
 
+    cy.matchImageSnapshot('after type click');
+
     cy.get('.action-email')
       .type('fake@email.com')
       .should('have.value', 'fake@email.com');
