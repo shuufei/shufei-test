@@ -1,0 +1,5 @@
+{
+    "tableName": "posts",
+    "partitionKeyName": "id",
+    "partitionKeyType": "N"
+}
