@@ -11,7 +11,7 @@ projects:
         generatedFileName: src/app/API.service.ts
         docsFilePath: src/graphql
   amplifyfargatetest:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/amplifyfargatetest/build/schema.graphql
     includes:
       - src/graphql/**/*.graphql
     excludes:

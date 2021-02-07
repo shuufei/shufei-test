@@ -21,4 +21,9 @@ export class AppComponent {
       name
     });
   }
+
+  async echo() {
+    const res = await this.api.Echo();
+    console.log('--- echo: ', res);
+  }
 }

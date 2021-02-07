@@ -19,3 +19,11 @@ type Comment @model @key(name: "byPost", fields: ["postID", "content"]) @auth(ru
   content: String!
   editor: String
 }
+
+type MyCustomLambdaExecutionResult {
+  data: String!
+}
+
+type Query {
+  echo: MyCustomLambdaExecutionResult
+}

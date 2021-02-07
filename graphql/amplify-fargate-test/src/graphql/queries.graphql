@@ -1,4 +1,9 @@
 # this is an auto generated file. This will be overwritten
+query Echo {
+  echo {
+    data
+  }
+}
 query ListBlogs(
   $filter: ModelBlogFilterInput
   $limit: Int

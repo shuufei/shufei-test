@@ -409,6 +409,11 @@ export type DeleteCommentMutation = {
   } | null;
 };
 
+export type EchoQuery = {
+  __typename: "MyCustomLambdaExecutionResult";
+  data: string;
+};
+
 export type ListBlogsQuery = {
   __typename: "ModelBlogConnection";
   items: Array<{
@@ -1192,6 +1197,16 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <DeleteCommentMutation>response.data.deleteComment;
+  }
+  async Echo(): Promise<EchoQuery> {
+    const statement = `query Echo {
+        echo {
+          __typename
+          data
+        }
+      }`;
+    const response = (await API.graphql(graphqlOperation(statement))) as any;
+    return <EchoQuery>response.data.echo;
   }
   async ListBlogs(
     filter?: ModelBlogFilterInput,
