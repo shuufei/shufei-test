@@ -1,8 +1,28 @@
 # this is an auto generated file. This will be overwritten
+query ListBlogs(
+  $filter: ModelBlogFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listBlogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      createdAt
+      updatedAt
+      posts {
+        nextToken
+      }
+    }
+    nextToken
+  }
+}
 query GetBlog($id: ID!) {
   getBlog(id: $id) {
     id
     name
+    createdAt
+    updatedAt
     posts {
       items {
         id
@@ -13,55 +33,6 @@ query GetBlog($id: ID!) {
       }
       nextToken
     }
-    createdAt
-    updatedAt
-  }
-}
-query ListBlogs(
-  $filter: ModelBlogFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listBlogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
-      posts {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-    nextToken
-  }
-}
-query GetPost($id: ID!) {
-  getPost(id: $id) {
-    id
-    title
-    blogID
-    blog {
-      id
-      name
-      posts {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-    comments {
-      items {
-        id
-        postID
-        content
-        editor
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-    createdAt
-    updatedAt
   }
 }
 query ListPosts(
@@ -74,6 +45,8 @@ query ListPosts(
       id
       title
       blogID
+      createdAt
+      updatedAt
       blog {
         id
         name
@@ -83,20 +56,53 @@ query ListPosts(
       comments {
         nextToken
       }
-      createdAt
-      updatedAt
     }
     nextToken
+  }
+}
+query GetPost($id: ID!) {
+  getPost(id: $id) {
+    id
+    title
+    blogID
+    createdAt
+    updatedAt
+    blog {
+      id
+      name
+      createdAt
+      updatedAt
+      posts {
+        nextToken
+      }
+    }
+    comments {
+      items {
+        id
+        postID
+        content
+        editor
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
   }
 }
 query GetComment($id: ID!) {
   getComment(id: $id) {
     id
     postID
+    content
+    editor
+    createdAt
+    updatedAt
     post {
       id
       title
       blogID
+      createdAt
+      updatedAt
       blog {
         id
         name
@@ -106,13 +112,7 @@ query GetComment($id: ID!) {
       comments {
         nextToken
       }
-      createdAt
-      updatedAt
     }
-    content
-    editor
-    createdAt
-    updatedAt
   }
 }
 query ListComments(
@@ -124,6 +124,10 @@ query ListComments(
     items {
       id
       postID
+      content
+      editor
+      createdAt
+      updatedAt
       post {
         id
         title
@@ -131,10 +135,6 @@ query ListComments(
         createdAt
         updatedAt
       }
-      content
-      editor
-      createdAt
-      updatedAt
     }
     nextToken
   }

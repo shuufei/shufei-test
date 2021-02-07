@@ -167,6 +167,8 @@ export type CreateBlogMutation = {
   __typename: "Blog";
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
   posts: {
     __typename: "ModelPostConnection";
     items: Array<{
@@ -179,14 +181,14 @@ export type CreateBlogMutation = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type UpdateBlogMutation = {
   __typename: "Blog";
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
   posts: {
     __typename: "ModelPostConnection";
     items: Array<{
@@ -199,14 +201,14 @@ export type UpdateBlogMutation = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type DeleteBlogMutation = {
   __typename: "Blog";
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
   posts: {
     __typename: "ModelPostConnection";
     items: Array<{
@@ -219,8 +221,6 @@ export type DeleteBlogMutation = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type CreatePostMutation = {
@@ -228,16 +228,18 @@ export type CreatePostMutation = {
   id: string;
   title: string;
   blogID: string;
+  createdAt: string;
+  updatedAt: string;
   blog: {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
   comments: {
     __typename: "ModelCommentConnection";
@@ -252,8 +254,6 @@ export type CreatePostMutation = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type UpdatePostMutation = {
@@ -261,16 +261,18 @@ export type UpdatePostMutation = {
   id: string;
   title: string;
   blogID: string;
+  createdAt: string;
+  updatedAt: string;
   blog: {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
   comments: {
     __typename: "ModelCommentConnection";
@@ -285,8 +287,6 @@ export type UpdatePostMutation = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type DeletePostMutation = {
@@ -294,16 +294,18 @@ export type DeletePostMutation = {
   id: string;
   title: string;
   blogID: string;
+  createdAt: string;
+  updatedAt: string;
   blog: {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
   comments: {
     __typename: "ModelCommentConnection";
@@ -318,19 +320,23 @@ export type DeletePostMutation = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type CreateCommentMutation = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -342,24 +348,24 @@ export type CreateCommentMutation = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type UpdateCommentMutation = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -371,24 +377,24 @@ export type UpdateCommentMutation = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type DeleteCommentMutation = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -400,33 +406,7 @@ export type DeleteCommentMutation = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type GetBlogQuery = {
-  __typename: "Blog";
-  id: string;
-  name: string;
-  posts: {
-    __typename: "ModelPostConnection";
-    items: Array<{
-      __typename: "Post";
-      id: string;
-      title: string;
-      blogID: string;
-      createdAt: string;
-      updatedAt: string;
-    } | null> | null;
-    nextToken: string | null;
-  } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type ListBlogsQuery = {
@@ -435,47 +415,34 @@ export type ListBlogsQuery = {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null> | null;
   nextToken: string | null;
 };
 
-export type GetPostQuery = {
-  __typename: "Post";
+export type GetBlogQuery = {
+  __typename: "Blog";
   id: string;
-  title: string;
-  blogID: string;
-  blog: {
-    __typename: "Blog";
-    id: string;
-    name: string;
-    posts: {
-      __typename: "ModelPostConnection";
-      nextToken: string | null;
-    } | null;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
-  comments: {
-    __typename: "ModelCommentConnection";
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  posts: {
+    __typename: "ModelPostConnection";
     items: Array<{
-      __typename: "Comment";
+      __typename: "Post";
       id: string;
-      postID: string;
-      content: string;
-      editor: string | null;
+      title: string;
+      blogID: string;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type ListPostsQuery = {
@@ -485,6 +452,8 @@ export type ListPostsQuery = {
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -496,21 +465,58 @@ export type ListPostsQuery = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null> | null;
   nextToken: string | null;
+};
+
+export type GetPostQuery = {
+  __typename: "Post";
+  id: string;
+  title: string;
+  blogID: string;
+  createdAt: string;
+  updatedAt: string;
+  blog: {
+    __typename: "Blog";
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    posts: {
+      __typename: "ModelPostConnection";
+      nextToken: string | null;
+    } | null;
+  } | null;
+  comments: {
+    __typename: "ModelCommentConnection";
+    items: Array<{
+      __typename: "Comment";
+      id: string;
+      postID: string;
+      content: string;
+      editor: string | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null> | null;
+    nextToken: string | null;
+  } | null;
 };
 
 export type GetCommentQuery = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -522,13 +528,7 @@ export type GetCommentQuery = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type ListCommentsQuery = {
@@ -537,6 +537,10 @@ export type ListCommentsQuery = {
     __typename: "Comment";
     id: string;
     postID: string;
+    content: string;
+    editor: string | null;
+    createdAt: string;
+    updatedAt: string;
     post: {
       __typename: "Post";
       id: string;
@@ -545,10 +549,6 @@ export type ListCommentsQuery = {
       createdAt: string;
       updatedAt: string;
     } | null;
-    content: string;
-    editor: string | null;
-    createdAt: string;
-    updatedAt: string;
   } | null> | null;
   nextToken: string | null;
 };
@@ -557,6 +557,8 @@ export type OnCreateBlogSubscription = {
   __typename: "Blog";
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
   posts: {
     __typename: "ModelPostConnection";
     items: Array<{
@@ -569,14 +571,14 @@ export type OnCreateBlogSubscription = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnUpdateBlogSubscription = {
   __typename: "Blog";
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
   posts: {
     __typename: "ModelPostConnection";
     items: Array<{
@@ -589,14 +591,14 @@ export type OnUpdateBlogSubscription = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnDeleteBlogSubscription = {
   __typename: "Blog";
   id: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
   posts: {
     __typename: "ModelPostConnection";
     items: Array<{
@@ -609,8 +611,6 @@ export type OnDeleteBlogSubscription = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnCreatePostSubscription = {
@@ -618,16 +618,18 @@ export type OnCreatePostSubscription = {
   id: string;
   title: string;
   blogID: string;
+  createdAt: string;
+  updatedAt: string;
   blog: {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
   comments: {
     __typename: "ModelCommentConnection";
@@ -642,8 +644,6 @@ export type OnCreatePostSubscription = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnUpdatePostSubscription = {
@@ -651,16 +651,18 @@ export type OnUpdatePostSubscription = {
   id: string;
   title: string;
   blogID: string;
+  createdAt: string;
+  updatedAt: string;
   blog: {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
   comments: {
     __typename: "ModelCommentConnection";
@@ -675,8 +677,6 @@ export type OnUpdatePostSubscription = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnDeletePostSubscription = {
@@ -684,16 +684,18 @@ export type OnDeletePostSubscription = {
   id: string;
   title: string;
   blogID: string;
+  createdAt: string;
+  updatedAt: string;
   blog: {
     __typename: "Blog";
     id: string;
     name: string;
+    createdAt: string;
+    updatedAt: string;
     posts: {
       __typename: "ModelPostConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
   comments: {
     __typename: "ModelCommentConnection";
@@ -708,19 +710,23 @@ export type OnDeletePostSubscription = {
     } | null> | null;
     nextToken: string | null;
   } | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnCreateCommentSubscription = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -732,24 +738,24 @@ export type OnCreateCommentSubscription = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnUpdateCommentSubscription = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -761,24 +767,24 @@ export type OnUpdateCommentSubscription = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type OnDeleteCommentSubscription = {
   __typename: "Comment";
   id: string;
   postID: string;
+  content: string;
+  editor: string | null;
+  createdAt: string;
+  updatedAt: string;
   post: {
     __typename: "Post";
     id: string;
     title: string;
     blogID: string;
+    createdAt: string;
+    updatedAt: string;
     blog: {
       __typename: "Blog";
       id: string;
@@ -790,13 +796,7 @@ export type OnDeleteCommentSubscription = {
       __typename: "ModelCommentConnection";
       nextToken: string | null;
     } | null;
-    createdAt: string;
-    updatedAt: string;
   } | null;
-  content: string;
-  editor: string | null;
-  createdAt: string;
-  updatedAt: string;
 };
 
 @Injectable({
@@ -812,6 +812,8 @@ export class APIService {
           __typename
           id
           name
+          createdAt
+          updatedAt
           posts {
             __typename
             items {
@@ -824,8 +826,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -848,6 +848,8 @@ export class APIService {
           __typename
           id
           name
+          createdAt
+          updatedAt
           posts {
             __typename
             items {
@@ -860,8 +862,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -884,6 +884,8 @@ export class APIService {
           __typename
           id
           name
+          createdAt
+          updatedAt
           posts {
             __typename
             items {
@@ -896,8 +898,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -921,16 +921,18 @@ export class APIService {
           id
           title
           blogID
+          createdAt
+          updatedAt
           blog {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           comments {
             __typename
@@ -945,8 +947,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -970,16 +970,18 @@ export class APIService {
           id
           title
           blogID
+          createdAt
+          updatedAt
           blog {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           comments {
             __typename
@@ -994,8 +996,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1019,16 +1019,18 @@ export class APIService {
           id
           title
           blogID
+          createdAt
+          updatedAt
           blog {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           comments {
             __typename
@@ -1043,8 +1045,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1067,11 +1067,17 @@ export class APIService {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1083,13 +1089,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1112,11 +1112,17 @@ export class APIService {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1128,13 +1134,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1157,11 +1157,17 @@ export class APIService {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1173,13 +1179,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1193,36 +1193,6 @@ export class APIService {
     )) as any;
     return <DeleteCommentMutation>response.data.deleteComment;
   }
-  async GetBlog(id: string): Promise<GetBlogQuery> {
-    const statement = `query GetBlog($id: ID!) {
-        getBlog(id: $id) {
-          __typename
-          id
-          name
-          posts {
-            __typename
-            items {
-              __typename
-              id
-              title
-              blogID
-              createdAt
-              updatedAt
-            }
-            nextToken
-          }
-          createdAt
-          updatedAt
-        }
-      }`;
-    const gqlAPIServiceArguments: any = {
-      id
-    };
-    const response = (await API.graphql(
-      graphqlOperation(statement, gqlAPIServiceArguments)
-    )) as any;
-    return <GetBlogQuery>response.data.getBlog;
-  }
   async ListBlogs(
     filter?: ModelBlogFilterInput,
     limit?: number,
@@ -1235,12 +1205,12 @@ export class APIService {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           nextToken
         }
@@ -1260,39 +1230,26 @@ export class APIService {
     )) as any;
     return <ListBlogsQuery>response.data.listBlogs;
   }
-  async GetPost(id: string): Promise<GetPostQuery> {
-    const statement = `query GetPost($id: ID!) {
-        getPost(id: $id) {
+  async GetBlog(id: string): Promise<GetBlogQuery> {
+    const statement = `query GetBlog($id: ID!) {
+        getBlog(id: $id) {
           __typename
           id
-          title
-          blogID
-          blog {
-            __typename
-            id
-            name
-            posts {
-              __typename
-              nextToken
-            }
-            createdAt
-            updatedAt
-          }
-          comments {
+          name
+          createdAt
+          updatedAt
+          posts {
             __typename
             items {
               __typename
               id
-              postID
-              content
-              editor
+              title
+              blogID
               createdAt
               updatedAt
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1301,7 +1258,7 @@ export class APIService {
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
-    return <GetPostQuery>response.data.getPost;
+    return <GetBlogQuery>response.data.getBlog;
   }
   async ListPosts(
     filter?: ModelPostFilterInput,
@@ -1316,6 +1273,8 @@ export class APIService {
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1327,8 +1286,6 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           nextToken
         }
@@ -1348,17 +1305,66 @@ export class APIService {
     )) as any;
     return <ListPostsQuery>response.data.listPosts;
   }
+  async GetPost(id: string): Promise<GetPostQuery> {
+    const statement = `query GetPost($id: ID!) {
+        getPost(id: $id) {
+          __typename
+          id
+          title
+          blogID
+          createdAt
+          updatedAt
+          blog {
+            __typename
+            id
+            name
+            createdAt
+            updatedAt
+            posts {
+              __typename
+              nextToken
+            }
+          }
+          comments {
+            __typename
+            items {
+              __typename
+              id
+              postID
+              content
+              editor
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      id
+    };
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GetPostQuery>response.data.getPost;
+  }
   async GetComment(id: string): Promise<GetCommentQuery> {
     const statement = `query GetComment($id: ID!) {
         getComment(id: $id) {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1370,13 +1376,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`;
     const gqlAPIServiceArguments: any = {
@@ -1399,6 +1399,10 @@ export class APIService {
             __typename
             id
             postID
+            content
+            editor
+            createdAt
+            updatedAt
             post {
               __typename
               id
@@ -1407,10 +1411,6 @@ export class APIService {
               createdAt
               updatedAt
             }
-            content
-            editor
-            createdAt
-            updatedAt
           }
           nextToken
         }
@@ -1439,6 +1439,8 @@ export class APIService {
           __typename
           id
           name
+          createdAt
+          updatedAt
           posts {
             __typename
             items {
@@ -1451,8 +1453,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1467,6 +1467,8 @@ export class APIService {
           __typename
           id
           name
+          createdAt
+          updatedAt
           posts {
             __typename
             items {
@@ -1479,8 +1481,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1495,6 +1495,8 @@ export class APIService {
           __typename
           id
           name
+          createdAt
+          updatedAt
           posts {
             __typename
             items {
@@ -1507,8 +1509,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1524,16 +1524,18 @@ export class APIService {
           id
           title
           blogID
+          createdAt
+          updatedAt
           blog {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           comments {
             __typename
@@ -1548,8 +1550,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1565,16 +1565,18 @@ export class APIService {
           id
           title
           blogID
+          createdAt
+          updatedAt
           blog {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           comments {
             __typename
@@ -1589,8 +1591,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1606,16 +1606,18 @@ export class APIService {
           id
           title
           blogID
+          createdAt
+          updatedAt
           blog {
             __typename
             id
             name
+            createdAt
+            updatedAt
             posts {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
           comments {
             __typename
@@ -1630,8 +1632,6 @@ export class APIService {
             }
             nextToken
           }
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1646,11 +1646,17 @@ export class APIService {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1662,13 +1668,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1683,11 +1683,17 @@ export class APIService {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1699,13 +1705,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`
     )
@@ -1720,11 +1720,17 @@ export class APIService {
           __typename
           id
           postID
+          content
+          editor
+          createdAt
+          updatedAt
           post {
             __typename
             id
             title
             blogID
+            createdAt
+            updatedAt
             blog {
               __typename
               id
@@ -1736,13 +1742,7 @@ export class APIService {
               __typename
               nextToken
             }
-            createdAt
-            updatedAt
           }
-          content
-          editor
-          createdAt
-          updatedAt
         }
       }`
     )

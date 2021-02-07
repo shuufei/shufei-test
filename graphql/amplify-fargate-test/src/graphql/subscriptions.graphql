@@ -3,6 +3,8 @@ subscription OnCreateBlog {
   onCreateBlog {
     id
     name
+    createdAt
+    updatedAt
     posts {
       items {
         id
@@ -13,14 +15,14 @@ subscription OnCreateBlog {
       }
       nextToken
     }
-    createdAt
-    updatedAt
   }
 }
 subscription OnUpdateBlog {
   onUpdateBlog {
     id
     name
+    createdAt
+    updatedAt
     posts {
       items {
         id
@@ -31,14 +33,14 @@ subscription OnUpdateBlog {
       }
       nextToken
     }
-    createdAt
-    updatedAt
   }
 }
 subscription OnDeleteBlog {
   onDeleteBlog {
     id
     name
+    createdAt
+    updatedAt
     posts {
       items {
         id
@@ -49,8 +51,6 @@ subscription OnDeleteBlog {
       }
       nextToken
     }
-    createdAt
-    updatedAt
   }
 }
 subscription OnCreatePost {
@@ -58,14 +58,16 @@ subscription OnCreatePost {
     id
     title
     blogID
+    createdAt
+    updatedAt
     blog {
       id
       name
+      createdAt
+      updatedAt
       posts {
         nextToken
       }
-      createdAt
-      updatedAt
     }
     comments {
       items {
@@ -78,8 +80,6 @@ subscription OnCreatePost {
       }
       nextToken
     }
-    createdAt
-    updatedAt
   }
 }
 subscription OnUpdatePost {
@@ -87,14 +87,16 @@ subscription OnUpdatePost {
     id
     title
     blogID
+    createdAt
+    updatedAt
     blog {
       id
       name
+      createdAt
+      updatedAt
       posts {
         nextToken
       }
-      createdAt
-      updatedAt
     }
     comments {
       items {
@@ -107,8 +109,6 @@ subscription OnUpdatePost {
       }
       nextToken
     }
-    createdAt
-    updatedAt
   }
 }
 subscription OnDeletePost {
@@ -116,14 +116,16 @@ subscription OnDeletePost {
     id
     title
     blogID
+    createdAt
+    updatedAt
     blog {
       id
       name
+      createdAt
+      updatedAt
       posts {
         nextToken
       }
-      createdAt
-      updatedAt
     }
     comments {
       items {
@@ -136,18 +138,22 @@ subscription OnDeletePost {
       }
       nextToken
     }
-    createdAt
-    updatedAt
   }
 }
 subscription OnCreateComment {
   onCreateComment {
     id
     postID
+    content
+    editor
+    createdAt
+    updatedAt
     post {
       id
       title
       blogID
+      createdAt
+      updatedAt
       blog {
         id
         name
@@ -157,23 +163,23 @@ subscription OnCreateComment {
       comments {
         nextToken
       }
-      createdAt
-      updatedAt
     }
-    content
-    editor
-    createdAt
-    updatedAt
   }
 }
 subscription OnUpdateComment {
   onUpdateComment {
     id
     postID
+    content
+    editor
+    createdAt
+    updatedAt
     post {
       id
       title
       blogID
+      createdAt
+      updatedAt
       blog {
         id
         name
@@ -183,23 +189,23 @@ subscription OnUpdateComment {
       comments {
         nextToken
       }
-      createdAt
-      updatedAt
     }
-    content
-    editor
-    createdAt
-    updatedAt
   }
 }
 subscription OnDeleteComment {
   onDeleteComment {
     id
     postID
+    content
+    editor
+    createdAt
+    updatedAt
     post {
       id
       title
       blogID
+      createdAt
+      updatedAt
       blog {
         id
         name
@@ -209,12 +215,6 @@ subscription OnDeleteComment {
       comments {
         nextToken
       }
-      createdAt
-      updatedAt
     }
-    content
-    editor
-    createdAt
-    updatedAt
   }
 }
