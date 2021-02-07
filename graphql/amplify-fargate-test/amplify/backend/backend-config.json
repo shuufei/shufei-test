@@ -12,5 +12,13 @@
         }
       }
     }
+  },
+  "auth": {
+    "amplifyfargatetest00983c3a": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
   }
 }
