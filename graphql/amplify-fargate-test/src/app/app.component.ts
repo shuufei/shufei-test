@@ -14,4 +14,11 @@ export class AppComponent {
     const blogs = await this.api.ListBlogs();
     console.log('--- blogs: ', blogs);
   }
+
+  async createBlog() {
+    const name = `${Math.random()}`;
+    this.api.CreateBlog({
+      name
+    });
+  }
 }
