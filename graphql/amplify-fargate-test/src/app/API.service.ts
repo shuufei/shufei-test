@@ -113,11 +113,13 @@ export type CreateCommentInput = {
   id?: string | null;
   postID: string;
   content: string;
+  editor?: string | null;
 };
 
 export type ModelCommentConditionInput = {
   postID?: ModelIDInput | null;
   content?: ModelStringInput | null;
+  editor?: ModelStringInput | null;
   and?: Array<ModelCommentConditionInput | null> | null;
   or?: Array<ModelCommentConditionInput | null> | null;
   not?: ModelCommentConditionInput | null;
@@ -127,6 +129,7 @@ export type UpdateCommentInput = {
   id: string;
   postID?: string | null;
   content?: string | null;
+  editor?: string | null;
 };
 
 export type DeleteCommentInput = {
@@ -154,6 +157,7 @@ export type ModelCommentFilterInput = {
   id?: ModelIDInput | null;
   postID?: ModelIDInput | null;
   content?: ModelStringInput | null;
+  editor?: ModelStringInput | null;
   and?: Array<ModelCommentFilterInput | null> | null;
   or?: Array<ModelCommentFilterInput | null> | null;
   not?: ModelCommentFilterInput | null;
@@ -242,6 +246,7 @@ export type CreatePostMutation = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -274,6 +279,7 @@ export type UpdatePostMutation = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -306,6 +312,7 @@ export type DeletePostMutation = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -339,6 +346,7 @@ export type CreateCommentMutation = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -367,6 +375,7 @@ export type UpdateCommentMutation = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -395,6 +404,7 @@ export type DeleteCommentMutation = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -458,6 +468,7 @@ export type GetPostQuery = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -515,6 +526,7 @@ export type GetCommentQuery = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -534,6 +546,7 @@ export type ListCommentsQuery = {
       updatedAt: string;
     } | null;
     content: string;
+    editor: string | null;
     createdAt: string;
     updatedAt: string;
   } | null> | null;
@@ -623,6 +636,7 @@ export type OnCreatePostSubscription = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -655,6 +669,7 @@ export type OnUpdatePostSubscription = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -687,6 +702,7 @@ export type OnDeletePostSubscription = {
       id: string;
       postID: string;
       content: string;
+      editor: string | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -720,6 +736,7 @@ export type OnCreateCommentSubscription = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -748,6 +765,7 @@ export type OnUpdateCommentSubscription = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -776,6 +794,7 @@ export type OnDeleteCommentSubscription = {
     updatedAt: string;
   } | null;
   content: string;
+  editor: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -920,6 +939,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -968,6 +988,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -1016,6 +1037,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -1065,6 +1087,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }
@@ -1109,6 +1132,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }
@@ -1153,6 +1177,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }
@@ -1260,6 +1285,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -1348,6 +1374,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }
@@ -1381,6 +1408,7 @@ export class APIService {
               updatedAt
             }
             content
+            editor
             createdAt
             updatedAt
           }
@@ -1514,6 +1542,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -1554,6 +1583,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -1594,6 +1624,7 @@ export class APIService {
               id
               postID
               content
+              editor
               createdAt
               updatedAt
             }
@@ -1635,6 +1666,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }
@@ -1671,6 +1703,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }
@@ -1707,6 +1740,7 @@ export class APIService {
             updatedAt
           }
           content
+          editor
           createdAt
           updatedAt
         }

@@ -72,6 +72,7 @@ subscription OnCreatePost {
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -100,6 +101,7 @@ subscription OnUpdatePost {
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -128,6 +130,7 @@ subscription OnDeletePost {
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -158,6 +161,7 @@ subscription OnCreateComment {
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }
@@ -183,6 +187,7 @@ subscription OnUpdateComment {
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }
@@ -208,6 +213,7 @@ subscription OnDeleteComment {
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }

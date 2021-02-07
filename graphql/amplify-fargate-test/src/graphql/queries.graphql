@@ -54,6 +54,7 @@ query GetPost($id: ID!) {
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -109,6 +110,7 @@ query GetComment($id: ID!) {
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }
@@ -130,6 +132,7 @@ query ListComments(
         updatedAt
       }
       content
+      editor
       createdAt
       updatedAt
     }

@@ -84,6 +84,7 @@ mutation CreatePost(
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -115,6 +116,7 @@ mutation UpdatePost(
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -146,6 +148,7 @@ mutation DeletePost(
         id
         postID
         content
+        editor
         createdAt
         updatedAt
       }
@@ -179,6 +182,7 @@ mutation CreateComment(
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }
@@ -207,6 +211,7 @@ mutation UpdateComment(
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }
@@ -235,6 +240,7 @@ mutation DeleteComment(
       updatedAt
     }
     content
+    editor
     createdAt
     updatedAt
   }
