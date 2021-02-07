@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { APIService } from './API.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'amplify-fargate-test';
+
+  constructor(private api: APIService) {}
+
+  async listBlogs() {
+    const blogs = await this.api.ListBlogs();
+    console.log('--- blogs: ', blogs);
+  }
 }
