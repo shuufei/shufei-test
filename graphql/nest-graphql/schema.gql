@@ -13,8 +13,36 @@ type Author {
   firstName: String
   lastName: String
   posts: [Post!]!
+  roleType: RoleType
+}
+
+enum RoleType {
+  System
+  Company
 }
 
 type Query {
+  authors: [Author!]!
   author(id: Int!): Author!
+}
+
+type Mutation {
+  createAuthor(params: CreateAuthorInput!): Author!
+  updateAuthor(params: UpdateAuthorInput!): Author!
+  upvotePost(upvotePostData: UpvotePostArgs!): Post!
+}
+
+input CreateAuthorInput {
+  firstName: String
+  lastName: String
+}
+
+input UpdateAuthorInput {
+  firstName: String
+  lastName: String
+}
+
+input UpvotePostArgs {
+  postId: Int!
+  title: String
 }
